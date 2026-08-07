@@ -119,7 +119,7 @@ export default function Page() {
 
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold flex items-center gap-4">
-                    Subventions associations votées
+                    Subventions aux associations (Paris)
                     <button
                         onClick={() => setShowInfo(true)}
                         className="cursor-pointer w-6 h-6 flex items-center justify-center rounded-full bg-black text-white text-sm font-bold"
@@ -161,9 +161,9 @@ export default function Page() {
                         Sont considérées comme bénéficiaires de subvention les associations relevant de la loi du 1er juillet 1901 ayant déposé par exercice budgétaire une ou plusieurs demandes de subvention auprès de la ville de Paris.
                     </p>
                     <p className="text-gray-700 mb-6">
-                        Données extraites de <a href="https://opendata.paris.fr/explore/dataset/subventions-associations-votees-/information/" className="text-blue-600 underline" target="_blank" rel="noopener noreferrer">Paris | DATA</a>, le site officiel de la démarche Open Data de la ville de Paris.
+                        Données extraites de <a href="https://opendata.paris.fr/explore/dataset/subventions-associations-votees-/information/" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">Paris | DATA</a>, site officiel de la démarche Open Data de la ville de Paris.
                     </p>
-                    <button onClick={() => setShowInfo(false)} className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800">
+                    <button onClick={() => setShowInfo(false)} className="px-4 py-2 bg-black text-white rounded hover:cursor-pointer hover:bg-gray-800">
                         Fermer
                     </button>
                 </div>
