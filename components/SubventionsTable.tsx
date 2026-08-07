@@ -6,9 +6,11 @@ type Props = {
   onResetCategory: () => void;
   searchTerm: string;
   onSearchTermChange: (value: string) => void;
+  groupBySiret: boolean;
+  onToggleGroupBySiret: () => void;
 };
 
-export function SubventionsTable({ data, selectedCategory, onResetCategory, searchTerm, onSearchTermChange }: Props) {
+export function SubventionsTable({ data, selectedCategory, onResetCategory, searchTerm, onSearchTermChange, groupBySiret, onToggleGroupBySiret }: Props) {
   // Filtrer par catégorie
   const filtered = selectedCategory
     ? data.filter(
@@ -18,32 +20,82 @@ export function SubventionsTable({ data, selectedCategory, onResetCategory, sear
       )
     : data;
 
-    const grouped = filtered.reduce<Record<string, {
-        nom_beneficiaire: string | "Non renseigné";
-        montant_total: number;
-        annee_budgetaire: number | null;
-        secteurs_d_activites_definies_par_l_association: string | null;
-        numero_siret: string | null;
-    }>>((acc, s) => {
-        const key = s.numero_siret || "-";
+    let rows: any[] = [];
 
-        if (!acc[key]) {
-            acc[key] = {
-                nom_beneficiaire: s.nom_beneficiaire || "Non renseigné",
-                montant_total: 0,
-                annee_budgetaire: s.annee_budgetaire,
-                secteurs_d_activites_definies_par_l_association: s.secteurs_d_activites_definies_par_l_association,
-                numero_siret: key,
-            };
-        }
+    if (groupBySiret) {
+        // ✅ mode groupé par SIRET
+        const grouped = filtered.reduce((acc, s) => {
+            const key = s.numero_siret || "Non renseigné";
 
-        acc[key].montant_total += s.montant_vote || 0;
+            if (!acc[key]) {
+                acc[key] = {
+                    secteurs_d_activites_definies_par_l_association: s.secteurs_d_activites_definies_par_l_association || "Non renseigné",
+                    nom_beneficiaire: s.nom_beneficiaire || "Non renseigné",
+                    numero_siret: s.numero_siret || "Non renseigné",
+                    montant_vote: 0,
+                    lignes: [],
+                };
+            }
 
-        return acc;
-    }, {});
+            acc[key].montant_vote += s.montant_vote || 0;
+            acc[key].lignes.push(s);
 
-    const sorted = Object.values(grouped).sort(
-        (a, b) => b.montant_total - a.montant_total
+            return acc;
+        }, {} as Record<string, any>);
+
+        rows = Object.values(grouped);
+    } else {
+        // ✅ mode non groupé : on affiche directement les subventions filtrées
+        rows = filtered;
+    }
+
+    // const grouped = filtered.reduce((acc, s) => {
+    //     const key = groupBySiret
+    //         ? s.numero_siret || "Non renseigné"
+    //         : s.nom_beneficiaire || "Non renseigné";
+
+    //     if (!acc[key]) {
+    //         acc[key] = {
+    //         nom_beneficiaire: s.nom_beneficiaire || "Non renseigné",
+    //         numero_siret: s.numero_siret || "Non renseigné",
+    //         montant_total: 0,
+    //         lignes: [],
+    //         };
+    //     }
+
+    //     acc[key].montant_total += s.montant_vote || 0;
+    //     acc[key].lignes.push(s);
+
+    //     return acc;
+    // }, {} as Record<string, any>);
+
+
+    // const grouped = filtered.reduce<Record<string, {
+    //     nom_beneficiaire: string | "Non renseigné";
+    //     montant_total: number;
+    //     annee_budgetaire: number | null;
+    //     secteurs_d_activites_definies_par_l_association: string | null;
+    //     numero_siret: string | null;
+    // }>>((acc, s) => {
+    //     const key = s.numero_siret || "-";
+
+    //     if (!acc[key]) {
+    //         acc[key] = {
+    //             nom_beneficiaire: s.nom_beneficiaire || "Non renseigné",
+    //             montant_total: 0,
+    //             annee_budgetaire: s.annee_budgetaire,
+    //             secteurs_d_activites_definies_par_l_association: s.secteurs_d_activites_definies_par_l_association,
+    //             numero_siret: key,
+    //         };
+    //     }
+
+    //     acc[key].montant_total += s.montant_vote || 0;
+
+    //     return acc;
+    // }, {});
+
+    const sorted = Object.values(rows).sort(
+        (a, b) => b.montant_vote - a.montant_vote
     );
 
     const filteredBySearch = sorted.filter((s) =>
@@ -51,16 +103,52 @@ export function SubventionsTable({ data, selectedCategory, onResetCategory, sear
     );
 
     // const total = sorted.reduce((sum, s) => sum + s.montant_total, 0);
-    const total = filteredBySearch.reduce((sum, s) => sum + s.montant_total, 0);
+    const total = filteredBySearch.reduce((sum, s) => sum + s.montant_vote, 0);
 
+    const totalCount = data.length;
+    const displayedCount = filteredBySearch.length;
 
     return (
         <div className="bg-white rounded-xl shadow p-6 mt-6">
             <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-x-20">
-                    <h2 className="text-xl font-semibold">
-                        Détails des subventions <span className="text-xs font-normal italic">(regroupées par #siret)</span>
-                    </h2>
+                    <div className="flex justify-between items-center">
+                        <h2 className="text-xl font-semibold">
+                            Détails des subventions
+                        </h2>
+
+                        <div className="flex items-center gap-6">
+                            {/* Compteur */}
+                            <span className="text-sm text-gray-700 ms-2">
+                                ({displayedCount}/{totalCount})
+                            </span>
+
+                            {/* Checkbox regroupement */}
+                            <label className="flex items-center gap-1 cursor-pointer select-none">
+                                <input
+                                    type="checkbox"
+                                    checked={groupBySiret}
+                                    onChange={onToggleGroupBySiret}
+                                    className="w-4 h-4"
+                                />
+                                <span className="text-sm">
+                                    regrouper par siret
+                                </span>
+                            </label>
+                        </div>
+{/*
+                        <label className="flex items-center gap-1 cursor-pointer select-none ms-4">
+                            <input
+                            type="checkbox"
+                            checked={groupBySiret}
+                            onChange={onToggleGroupBySiret}
+                            className="w-4 h-4 cursor-pointer"
+                            />
+                            <span className="text-sm cursor-pointer">
+                            Regrouper par SIRET
+                            </span>
+                        </label> */}
+                    </div>
 
                     <div className="relative">
                         <input
@@ -74,8 +162,8 @@ export function SubventionsTable({ data, selectedCategory, onResetCategory, sear
                         {searchTerm.length > 0 && (
                             <button
                             onClick={() => onSearchTermChange("")}
-                            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 font-bold"
-                            title="Effacer le filtre"
+                            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:cursor-pointer hover:text-gray-700 font-bold"
+                            title="Réinitialiser le filtre"
                             >
                             ×
                             </button>
@@ -84,13 +172,13 @@ export function SubventionsTable({ data, selectedCategory, onResetCategory, sear
                 </div>
                 {selectedCategory && (
                     <span className="text-sm text-gray-600 flex items-center">
-                    Secteur d'activité : <strong className="ml-1">{selectedCategory}</strong>
+                    <strong className="ml-1">{selectedCategory}</strong>
 
                     {/* Bouton reset */}
                     <button
                         onClick={onResetCategory}
-                        className="ml-3 text-red-500 hover:text-red-700 font-bold text-lg"
-                        title="Réinitialiser le filtre"
+                        className="ml-2 text-red-500 hover:cursor-pointer hover:text-red-700 font-bold text-lg"
+                        title="Supprimer le filtre"
                     >
                         ×
                     </button>
@@ -101,6 +189,21 @@ export function SubventionsTable({ data, selectedCategory, onResetCategory, sear
             <div className="overflow-x-auto">
                 <table className="min-w-full text-sm">
                     <thead className="bg-gray-100">
+                        <tr className="bg-white font-semibold">
+                            <td className="px-4 py-2"></td>
+                            <td className="px-4 py-2"></td>
+                            <td className="px-4 py-2"></td>
+                            <td className="px-4 py-2 text-right text-red-500">TOTAL:</td>
+                            <td className="px-4 py-2 text-right text-red-500">
+                                {total.toLocaleString("fr-FR", {
+                                    style: "currency",
+                                    currency: "EUR",
+                                    minimumFractionDigits: 0,
+                                    maximumFractionDigits: 0,
+                                    currencyDisplay: 'code',
+                                })}
+                            </td>
+                        </tr>
                         <tr>
                             <th className="px-4 py-2 text-center">#</th>
                             <th className="px-4 py-2 text-left">Secteur d'activité</th>
@@ -112,38 +215,40 @@ export function SubventionsTable({ data, selectedCategory, onResetCategory, sear
 
                     <tbody>
                         {filteredBySearch.map((s, index) => (
-                        // {sorted.map((s, index) => (
-                        <tr key={s.nom_beneficiaire} className="border-b">
-                            <td className="px-4 py-2 text-center">{index + 1}</td>
-                            <td className="px-4 py-2">{s.secteurs_d_activites_definies_par_l_association ?? "-"}</td>
-                            <td className="px-4 py-2">
-                                <a href={`https://annuaire-entreprises.data.gouv.fr/entreprise/aaa-${s.numero_siret?.slice(0,9)}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{s.numero_siret ?? "-"}</a>
-                            </td>
-                            <td className="px-4 py-2">
-                                <span title={`${s.nom_beneficiaire}`}>{s.nom_beneficiaire.length > 50
-                                    ? s.nom_beneficiaire.slice(0, 50) + "…"
-                                    : s.nom_beneficiaire}
-                                </span>
-                            </td>
-                            <td className="px-4 py-2 text-right">
-                                {s.montant_total?.toLocaleString("fr-FR", {
-                                    style: "decimal",
-                                    currency: "EUR",
-                                    minimumFractionDigits: 0,
-                                }) ?? "-"}
-                            </td>
-                        </tr>
+                            <tr key={index} className="border-b">
+                                <td className="px-4 py-2 text-center">{index + 1}</td>
+                                <td className="px-4 py-2">{s.secteurs_d_activites_definies_par_l_association ?? "-"}</td>
+                                <td className="px-4 py-2">
+                                    <a href={`https://annuaire-entreprises.data.gouv.fr/entreprise/aaa-${s.numero_siret?.slice(0,9)}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{s.numero_siret ?? "-"}</a>
+                                </td>
+                                <td className="px-4 py-2">
+                                    <span title={`${s.nom_beneficiaire}`}>{s.nom_beneficiaire.length > 50
+                                        ? s.nom_beneficiaire.slice(0, 50) + "…"
+                                        : s.nom_beneficiaire}
+                                    </span>
+                                    {groupBySiret ? " ("+s.lignes.length+")" : ""}
+                                </td>
+                                <td className="px-4 py-2 text-right">
+                                    {s.montant_vote?.toLocaleString("fr-FR", {
+                                        style: "decimal",
+                                        currency: "EUR",
+                                        minimumFractionDigits: 0,
+                                    }) ?? "-"}
+                                </td>
+                            </tr>
                         ))}
                         <tr className="bg-gray-200 font-semibold">
                             <td className="px-4 py-2"></td>
                             <td className="px-4 py-2"></td>
                             <td className="px-4 py-2"></td>
-                            <td className="px-4 py-2 text-right text-red-500">Total:</td>
+                            <td className="px-4 py-2 text-right text-red-500">TOTAL:</td>
                             <td className="px-4 py-2 text-right text-red-500">
                                 {total.toLocaleString("fr-FR", {
                                     style: "currency",
                                     currency: "EUR",
                                     minimumFractionDigits: 0,
+                                    maximumFractionDigits: 0,
+                                    currencyDisplay: 'code',
                                 })}
                             </td>
                         </tr>

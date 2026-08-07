@@ -17,9 +17,20 @@ type Props = {
     data: Subvention[];
     selectedCategory: string | null;
     onCategoryClick: (category: string | null) => void;
+    countByCategory: Record<string, number>;
 };
 
-export function PieChart({ data, selectedCategory, onCategoryClick }: Props) {
+
+export function PieChart({ data, selectedCategory, onCategoryClick, countByCategory }: Props) {
+
+    if (data.length === 0) {
+        return (
+            <div className="bg-white rounded-xl shadow w-full h-64 flex items-center justify-center text-gray-500">
+                Données indisponibles
+            </div>
+        );
+    }
+
     // Agrégation des montants par catégorie
     const byCategory = data.reduce<Record<string, number>>((acc, s) => {
         const key = s.secteurs_d_activites_definies_par_l_association || "Non renseigné";
@@ -154,19 +165,23 @@ export function PieChart({ data, selectedCategory, onCategoryClick }: Props) {
                         const item = context[0];
                         const value = item.raw as number;
                         // const total = item.chart._metasets[0].total;
-                        const percent = ((value / totalAll) * 100).toFixed(1);
-                        return `${item.label}`;
-                        return `${item.label} (${percent} %)`;
+                        // const percent = ((value / totalAll) * 100).toFixed(1);
+                        const label = item.label || "Non renseigné";                        // const label = label || "Non renseigné";
+                        const count = countByCategory[label] || 0;
+                        // return `${item.label}`;
+                        return `${item.label} - ${count} subventions`;
                     },
                     label: function (context: TooltipItem<"pie">) {
                         const value = context.raw as number;
                         // const total = context.chart._metasets[0].total;
                         const percent = ((value / totalAll) * 100).toFixed(1);
+                        // const label = context.label || "Non renseigné";                        // const label = label || "Non renseigné";
+                        // const count = countByCategory[label] || 0;
                         return (
                             " " +
                             value.toLocaleString("fr-FR", { minimumFractionDigits: 0 }) +
                             " eur " +
-                            `(${percent} %)`
+                            `- ${percent}%`
                         );
                     },
                 },
@@ -237,9 +252,9 @@ export function PieChart({ data, selectedCategory, onCategoryClick }: Props) {
                                     ></span>
 
                                     <span>
-                                    <strong>{item.label}</strong> :{" "}
-                                    {item.value.toLocaleString("fr-FR")} EUR{" "}
-                                    <span className="text-gray-600">({item.percent} %)</span>
+                                        <strong>{item.label}</strong> :{" "}
+                                        {item.value.toLocaleString("fr-FR")} eur{" "}
+                                        {/* <span className="text-gray-600">({item.percent} %)</span> */}
                                     </span>
                                 </div>
 
