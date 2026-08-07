@@ -19,7 +19,7 @@ export function SubventionsTable({ data, selectedCategory, onResetCategory, sear
     : data;
 
     const grouped = filtered.reduce<Record<string, {
-        nom_beneficiaire: string | null;
+        nom_beneficiaire: string | "Non renseigné";
         montant_total: number;
         annee_budgetaire: number | null;
         secteurs_d_activites_definies_par_l_association: string | null;
@@ -29,7 +29,7 @@ export function SubventionsTable({ data, selectedCategory, onResetCategory, sear
 
         if (!acc[key]) {
             acc[key] = {
-                nom_beneficiaire: s.nom_beneficiaire,
+                nom_beneficiaire: s.nom_beneficiaire || "Non renseigné",
                 montant_total: 0,
                 annee_budgetaire: s.annee_budgetaire,
                 secteurs_d_activites_definies_par_l_association: s.secteurs_d_activites_definies_par_l_association,

@@ -84,9 +84,9 @@ export function PieChart({ data, selectedCategory, onCategoryClick }: Props) {
     //     hiddenSlices.includes(label) ? null : realValues[index]
     // );
 
-    const totalVisible = values
-        .filter((v) => v !== null)
-        .reduce((a, b) => a + b, 0);
+    // const totalVisible = values
+    //     .filter((v) => v !== null)
+    //     .reduce((a, b) => a + b, 0);
 
     const chartData = {
         labels,
@@ -152,14 +152,14 @@ export function PieChart({ data, selectedCategory, onCategoryClick }: Props) {
                 callbacks: {
                     title: function (context: TooltipItem<"pie">[]) {
                         const item = context[0];
-                        const value = item.raw;
+                        const value = item.raw as number;
                         // const total = item.chart._metasets[0].total;
                         const percent = ((value / totalAll) * 100).toFixed(1);
                         return `${item.label}`;
                         return `${item.label} (${percent} %)`;
                     },
-                    label: function (context: TooltipItem<"pie">[]) {
-                        const value = context.raw || 0;
+                    label: function (context: TooltipItem<"pie">) {
+                        const value = context.raw as number;
                         // const total = context.chart._metasets[0].total;
                         const percent = ((value / totalAll) * 100).toFixed(1);
                         return (
