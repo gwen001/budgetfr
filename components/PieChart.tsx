@@ -7,6 +7,7 @@ import {
     ArcElement,
     Tooltip,
     Legend,
+    TooltipItem
 } from "chart.js";
 import { Subvention } from "@/lib/supabase";
 
@@ -149,7 +150,7 @@ export function PieChart({ data, selectedCategory, onCategoryClick }: Props) {
                 borderColor: "white",
                 borderWidth: 1,
                 callbacks: {
-                    title: function (context) {
+                    title: function (context: TooltipItem<"pie">[]) {
                         const item = context[0];
                         const value = item.raw;
                         // const total = item.chart._metasets[0].total;
@@ -157,7 +158,7 @@ export function PieChart({ data, selectedCategory, onCategoryClick }: Props) {
                         return `${item.label}`;
                         return `${item.label} (${percent} %)`;
                     },
-                    label: function (context) {
+                    label: function (context: TooltipItem<"pie">[]) {
                         const value = context.raw || 0;
                         // const total = context.chart._metasets[0].total;
                         const percent = ((value / totalAll) * 100).toFixed(1);
