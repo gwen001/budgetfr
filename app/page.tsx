@@ -196,7 +196,7 @@ export default function Page() {
                 onToggleGroupBySiret={() => setGroupBySiret((v) => !v)}
             />
 
-            <Analytics/>
+            <Analytics />
 
         </main>
     );
