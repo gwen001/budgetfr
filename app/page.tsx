@@ -37,6 +37,7 @@ export default function Page() {
 
     useEffect(() => {
         const fetchData = async () => {
+            setLoading(true);
             try {
                 const res = await fetch(`/api/subventions?year=${selectedYear}`);
                 const json = await res.json();
@@ -101,13 +102,13 @@ export default function Page() {
     //     fetchData();
     // }, []);
 
-    if (loading) {
-        return (
-            <div className="flex items-center justify-center h-screen">
-            <span className="text-gray-600">Chargement des données…</span>
-            </div>
-        );
-    }
+    // if (loading) {
+    //     return (
+    //         <div className="flex items-center justify-center h-screen">
+    //         <span className="text-gray-600">Chargement des données…</span>
+    //         </div>
+    //     );
+    // }
 
     return (
         <main className="space-y-6">
@@ -155,28 +156,34 @@ export default function Page() {
                 className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full"
                 onClick={(e) => e.stopPropagation()}   // 👈 clic dans la popup = ne pas fermer
                 >
-                <h2 className="text-xl font-semibold mb-4">Informations</h2>
-
-                <p className="text-gray-700 mb-6">
-                    Ici tu pourras expliquer les détails importants de l'application.
-                </p>
-
-                <button
-                    onClick={() => setShowInfo(false)}
-                    className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
-                >
-                    Fermer
-                </button>
+                    <h2 className="text-xl font-semibold mb-4">Liste des subventions aux associations votées par la ville de Paris.</h2>
+                    <p className="text-gray-700 mb-6">
+                        Sont considérées comme bénéficiaires de subvention les associations relevant de la loi du 1er juillet 1901 ayant déposé par exercice budgétaire une ou plusieurs demandes de subvention auprès de la ville de Paris.
+                    </p>
+                    <p className="text-gray-700 mb-6">
+                        Données extraites de <a href="https://opendata.paris.fr/explore/dataset/subventions-associations-votees-/information/" className="text-blue-600 underline" target="_blank" rel="noopener noreferrer">Paris | DATA</a>, le site officiel de la démarche Open Data de la ville de Paris.
+                    </p>
+                    <button onClick={() => setShowInfo(false)} className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800">
+                        Fermer
+                    </button>
                 </div>
             </div>
         )}
 
-        <PieChart
-            data={data}
-            selectedCategory={selectedCategory}
-            onCategoryClick={(cat) => { setSelectedCategory(cat); setSearchTerm(""); }}
-            countByCategory={countByCategory}
-        />
+        {loading ? (
+            <div className="bg-white rounded-xl shadow p-6">
+                <div className="flex items-center justify-center h-100">
+                    <span className="text-gray-600">Chargement des données...</span>
+                </div>
+            </div>
+        ) : (
+            <PieChart
+                data={data}
+                selectedCategory={selectedCategory}
+                onCategoryClick={(cat) => { setSelectedCategory(cat); setSearchTerm(""); }}
+                countByCategory={countByCategory}
+            />
+        )}
 
         <SubventionsTable
             data={data}
