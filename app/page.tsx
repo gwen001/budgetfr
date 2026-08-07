@@ -7,6 +7,7 @@ import { SubventionsTable } from "@/components/SubventionsTable";
 
 export default function Page() {
     const [data, setData] = useState<Subvention[]>([]);
+    const [showInfo, setShowInfo] = useState(false);
     const [loading, setLoading] = useState(true);
     const [selectedYear, setSelectedYear] = useState<number>(2025);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -17,6 +18,22 @@ export default function Page() {
         acc[cat] = (acc[cat] || 0) + 1;
         return acc;
     }, {} as Record<string, number>);
+
+    useEffect(() => {
+        if (!showInfo) return;
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+            setShowInfo(false);
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [showInfo]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -100,7 +117,16 @@ export default function Page() {
             </h1> */}
 
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold">Subventions associations votées</h1>
+                <h1 className="text-3xl font-bold flex items-center gap-4">
+                    Subventions associations votées
+                    <button
+                        onClick={() => setShowInfo(true)}
+                        className="cursor-pointer w-6 h-6 flex items-center justify-center rounded-full bg-black text-white text-sm font-bold"
+                        aria-label="Informations"
+                        >
+                        ?
+                    </button>
+                </h1>
 
                 <div className="flex items-center gap-6">
                     {[2023, 2024, 2025].map((year) => (
@@ -119,6 +145,31 @@ export default function Page() {
                 </div>
             </div>
         </header>
+
+        {showInfo && (
+            <div
+                className="fixed inset-0 bg-black/70 flex items-center justify-center z-50"
+                onClick={() => setShowInfo(false)}   // 👈 clic sur le fond = fermer
+            >
+                <div
+                className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full"
+                onClick={(e) => e.stopPropagation()}   // 👈 clic dans la popup = ne pas fermer
+                >
+                <h2 className="text-xl font-semibold mb-4">Informations</h2>
+
+                <p className="text-gray-700 mb-6">
+                    Ici tu pourras expliquer les détails importants de l'application.
+                </p>
+
+                <button
+                    onClick={() => setShowInfo(false)}
+                    className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
+                >
+                    Fermer
+                </button>
+                </div>
+            </div>
+        )}
 
         <PieChart
             data={data}
