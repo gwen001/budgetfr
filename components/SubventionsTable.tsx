@@ -111,88 +111,82 @@ export function SubventionsTable({ data, selectedCategory, onResetCategory, sear
     return (
         <div className="bg-white rounded-xl shadow p-6 mt-6">
             <div className="flex justify-between items-center mb-4">
-                <div className="flex items-center gap-x-20">
+                <div className="grid grid-cols-1 lg:flex items-center gap-x-20">
                     <div className="flex justify-between items-center">
-                        <h2 className="text-xl font-semibold">
+                        {/* Titre */}
+                        <h2 className="text-m lg:text-xl font-semibold mb-2 lg:mb-0">
                             Détails des subventions
                         </h2>
 
-                        <div className="flex items-center gap-6">
-                            {/* Compteur */}
+                        {/* Compteur */}
+                        <div className="flex items-center">
                             <span className="text-sm text-gray-700 ms-2">
                                 ({displayedCount}/{totalCount})
                             </span>
-
-                            {/* Checkbox regroupement */}
-                            <label className="flex items-center gap-1 cursor-pointer select-none">
-                                <input
-                                    type="checkbox"
-                                    checked={groupBySiret}
-                                    onChange={onToggleGroupBySiret}
-                                    className="w-4 h-4"
-                                />
-                                <span className="text-sm">
-                                    regrouper par siret
-                                </span>
-                            </label>
                         </div>
-{/*
+
+                        {/* Checkbox regroupement */}
                         <label className="flex items-center gap-1 cursor-pointer select-none ms-4">
                             <input
-                            type="checkbox"
-                            checked={groupBySiret}
-                            onChange={onToggleGroupBySiret}
-                            className="w-4 h-4 cursor-pointer"
+                                type="checkbox"
+                                checked={groupBySiret}
+                                onChange={onToggleGroupBySiret}
+                                className="w-4 h-4"
                             />
-                            <span className="text-sm cursor-pointer">
-                            Regrouper par SIRET
+                            <span className="text-sm">
+                                regrouper par siret
                             </span>
-                        </label> */}
+                        </label>
                     </div>
 
+                    {/* Filtre textuel */}
                     <div className="relative">
                         <input
                             type="text"
                             value={searchTerm}
                             onChange={(e) => onSearchTermChange(e.target.value)}
-                            placeholder="Filtrer par bénéficiaire…"
-                            className="border rounded px-3 py-1 text-sm pr-6"
+                            placeholder="Filtrer par bénéficiaire..."
+                            className="border rounded px-3 py-1 text-sm pr-6 w-full mb-2 lg:mb-0"
                         />
 
                         {searchTerm.length > 0 && (
                             <button
                             onClick={() => onSearchTermChange("")}
-                            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:cursor-pointer hover:text-gray-700 font-bold"
+                            className="pb-2 lg:pb-0 absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:cursor-pointer hover:text-gray-700 font-bold"
                             title="Réinitialiser le filtre"
                             >
                             ×
                             </button>
                         )}
                     </div>
-                </div>
-                {selectedCategory && (
-                    <span className="text-sm text-gray-600 flex items-center">
-                    <strong className="ml-1">{selectedCategory}</strong>
 
-                    {/* Bouton reset */}
-                    <button
-                        onClick={onResetCategory}
-                        className="ml-2 text-red-500 hover:cursor-pointer hover:text-red-700 font-bold text-lg"
-                        title="Supprimer le filtre"
-                    >
-                        ×
-                    </button>
-                    </span>
-                )}
+                    {/* Filtre secteur d'activité */}
+                    <div className="border-0">
+                        {selectedCategory && (
+                            <span className="text-sm text-gray-600 flex items-center">
+                            <strong className="ml-1">{selectedCategory}</strong>
+
+                            {/* Bouton reset */}
+                            <button
+                                onClick={onResetCategory}
+                                className="ml-2 text-red-500 hover:cursor-pointer hover:text-red-700 font-bold text-lg"
+                                title="Supprimer le filtre"
+                            >
+                                ×
+                            </button>
+                            </span>
+                        )}
+                    </div>
+                </div>
             </div>
 
             <div className="overflow-x-auto">
-                <table className="min-w-full text-sm">
+                <table className="min-w-full text-xs md:text-sm">
                     <thead className="bg-gray-100">
                         <tr className="bg-white font-semibold">
                             <td className="px-4 py-2"></td>
                             <td className="px-4 py-2"></td>
-                            <td className="px-4 py-2"></td>
+                            <td className="px-4 py-2 hidden md:block"></td>
                             <td className="px-4 py-2 text-right text-red-500">TOTAL:</td>
                             <td className="px-4 py-2 text-right text-red-500">
                                 {total.toLocaleString("fr-FR", {
@@ -207,7 +201,7 @@ export function SubventionsTable({ data, selectedCategory, onResetCategory, sear
                         <tr>
                             <th className="px-4 py-2 text-center">#</th>
                             <th className="px-4 py-2 text-left">Secteur d'activité</th>
-                            <th className="px-4 py-2 text-left">Siret</th>
+                            <th className="px-4 py-2 text-left hidden md:block">Siret</th>
                             <th className="px-4 py-2 text-left">Bénéficiaire</th>
                             <th className="px-4 py-2 text-right">Montant voté</th>
                         </tr>
@@ -218,7 +212,7 @@ export function SubventionsTable({ data, selectedCategory, onResetCategory, sear
                             <tr key={index} className="border-b">
                                 <td className="px-4 py-2 text-center">{index + 1}</td>
                                 <td className="px-4 py-2">{s.secteurs_d_activites_definies_par_l_association ?? "-"}</td>
-                                <td className="px-4 py-2">
+                                <td className="px-4 py-2 hidden md:block">
                                     <a href={`https://annuaire-entreprises.data.gouv.fr/entreprise/aaa-${s.numero_siret?.slice(0,9)}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{s.numero_siret ?? "-"}</a>
                                 </td>
                                 <td className="px-4 py-2">
@@ -264,7 +258,7 @@ export function SubventionsTable({ data, selectedCategory, onResetCategory, sear
                         <tr className="bg-gray-200 font-semibold">
                             <td className="px-4 py-2"></td>
                             <td className="px-4 py-2"></td>
-                            <td className="px-4 py-2"></td>
+                            <td className="px-4 py-2 hidden md:block"></td>
                             <td className="px-4 py-2 text-right text-red-500">TOTAL:</td>
                             <td className="px-4 py-2 text-right text-red-500">
                                 {total.toLocaleString("fr-FR", {

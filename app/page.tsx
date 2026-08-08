@@ -114,25 +114,20 @@ export default function Page() {
     return (
         <main className="space-y-6">
             <header className="mb-4">
-                {/* <h1 className="text-3xl font-bold mb-2">
-                    Subventions associations votées
-                </h1> */}
-
-                <div className="flex justify-between items-center mb-6">
-                    <h1 className="text-3xl font-bold flex items-center gap-4">
+                <div className="lg:flex justify-between items-center mb-6">
+                    <h1 className="text-2xl sm:text-3xl font-bold text-center lg:text-left lg:flex items-center gap-4">
                         Subventions aux associations (Paris)
                         <button
                             onClick={() => setShowInfo(true)}
-                            className="cursor-pointer w-6 h-6 flex items-center justify-center rounded-full bg-black text-white text-sm font-bold"
+                            className="ms-4 lg:ms-0 align-middle cursor-pointer w-6 h-6 lg:flex items-center justify-center rounded-full bg-black text-white text-sm font-bold"
                             aria-label="Informations"
                             >
                             ?
                         </button>
                     </h1>
-
-                    <div className="flex items-center gap-6">
+                    <div className="mt-3 lg:mt-0 lg:flex items-center text-center gap-6">
                         {[2023, 2024, 2025].map((year) => (
-                            <label key={year} className="flex items-center gap-2 cursor-pointer">
+                            <label key={year} className="ms-3 lg:ms-0 lg:flex items-center gap-2 cursor-pointer">
                                 <input
                                 type="radio"
                                 name="year-filter"
@@ -141,7 +136,7 @@ export default function Page() {
                                 onChange={() => setSelectedYear(year)}
                                 className="w-4 h-4"
                                 />
-                                <span>{year}</span>
+                                <span className="ms-1 lg:ms-0">{year}</span>
                             </label>
                         ))}
                     </div>

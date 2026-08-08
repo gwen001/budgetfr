@@ -223,17 +223,16 @@ export function PieChart({ data, selectedCategory, onCategoryClick, countByCateg
 
     return (
         <div className="bg-white rounded-xl shadow p-6">
-            <h2 className="text-xl font-semibold mb-4">
+            <h2 className="text-center lg:text-left text-xl font-semibold mb-4">
                 Répartition des montants par secteur d'activité
             </h2>
 
-            <div className="flex gap-6 items-start border-0 justify-center">
-                <div className="w-1/2 border-0">
+            <div className="flex flex-col lg:flex-row gap-6 border-0 items-center lg:items-start lg:justify-center">
+                <div className="w-2/3 lg:w-1/2 border-0">
                     <Pie data={chartData} options={options} />
                 </div>
-                <div className="w-1/3 text-xs border-0">
-                    <div className="bg-white border-0">
-                        {legend.map((item) => (
+                <div className="w-full lg:w-1/3 text-xs justify-center border-0 grid grid-cols-2 lg:grid-cols-1">
+                    {legend.map((item,index) => (
                             <div
                                 key={item.label}
                                 className={
@@ -244,33 +243,23 @@ export function PieChart({ data, selectedCategory, onCategoryClick, countByCateg
                                 }
                                 onClick={() => handleLegendClick(item.label)}
                                 >
-                                {/* Pastille couleur */}
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-2"> {/* Pastille couleur */}
                                     <span
-                                    className="inline-block w-3 h-3 rounded"
+                                    className="inline-block w-3 h-3 rounded mb-5 lg:mb-0"
                                     style={{ backgroundColor: item.color }}
                                     ></span>
-
-                                    <span>
-                                        <strong>{item.label}</strong> :{" "}
-                                        {item.value.toLocaleString("fr-FR")} eur{" "}
-                                        {/* <span className="text-gray-600">({item.percent} %)</span> */}
-                                    </span>
+                                    <div className="flex flex-col lg:flex-row gap-1">
+                                        <span className="p-0 m-0 border-0">
+                                            <strong>{item.label}</strong> :{" "}
+                                        </span>
+                                        <span className="p-0 m-0 border-0">
+                                            {item.value.toLocaleString("fr-FR")} eur{" "}
+                                            {/* <span className="text-gray-600">({item.percent} %)</span> */}
+                                        </span>
+                                    </div>
                                 </div>
-
-                                {/* {selectedCategory === item.label && (
-                                    <button
-                                    onClick={(e) => {
-                                        e.stopPropagation(); // évite de recliquer la ligne
-                                        onCategoryClick(null); // reset du filtre
-                                    }}
-                                    className="text-red-500 hover:text-red-700 font-bold text-base"
-                                    title="Réinitialiser le filtre"
-                                    >×</button>
-                                )} */}
                             </div>
                         ))}
-                    </div>
                 </div>
             </div>
         </div>
