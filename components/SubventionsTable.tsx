@@ -184,7 +184,7 @@ export function SubventionsTable({ data, selectedCategory, onResetCategory, sear
                 <table className="min-w-full text-xs md:text-sm">
                     <thead className="bg-gray-100">
                         <tr className="bg-white font-semibold">
-                            <td className="px-4 py-2"></td>
+                            <td className="px-4 py-2 hidden sm:block"></td>
                             <td className="px-4 py-2"></td>
                             <td className="px-4 py-2 hidden md:block"></td>
                             <td className="px-4 py-2 text-right text-red-500">TOTAL:</td>
@@ -199,7 +199,7 @@ export function SubventionsTable({ data, selectedCategory, onResetCategory, sear
                             </td>
                         </tr>
                         <tr>
-                            <th className="px-4 py-2 text-center">#</th>
+                            <th className="px-4 py-2 text-center hidden sm:block">#</th>
                             <th className="px-4 py-2 text-left">Secteur d'activité</th>
                             <th className="px-4 py-2 text-left hidden md:block">Siret</th>
                             <th className="px-4 py-2 text-left">Bénéficiaire</th>
@@ -210,7 +210,7 @@ export function SubventionsTable({ data, selectedCategory, onResetCategory, sear
                     <tbody>
                         {filteredBySearch.map((s, index) => (
                             <tr key={index} className="border-b">
-                                <td className="px-4 py-2 text-center">{index + 1}</td>
+                                <td className="px-4 py-2 text-center hidden sm:block">{index + 1}</td>
                                 <td className="px-4 py-2">{s.secteurs_d_activites_definies_par_l_association ?? "-"}</td>
                                 <td className="px-4 py-2 hidden md:block">
                                     <a href={`https://annuaire-entreprises.data.gouv.fr/entreprise/aaa-${s.numero_siret?.slice(0,9)}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{s.numero_siret ?? "-"}</a>
@@ -256,7 +256,7 @@ export function SubventionsTable({ data, selectedCategory, onResetCategory, sear
                             </tr>
                         ))}
                         <tr className="bg-gray-200 font-semibold">
-                            <td className="px-4 py-2"></td>
+                            <td className="px-4 py-2 hidden sm:block"></td>
                             <td className="px-4 py-2"></td>
                             <td className="px-4 py-2 hidden md:block"></td>
                             <td className="px-4 py-2 text-right text-red-500">TOTAL:</td>

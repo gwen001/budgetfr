@@ -7,6 +7,7 @@ import { SubventionsTable } from "@/components/SubventionsTable";
 import { Analytics } from "@vercel/analytics/next"
 
 export default function Page() {
+    const enableAnalytics = process.env.NEXT_PUBLIC_ENABLE_ANALYTICS === "true";
     const [data, setData] = useState<Subvention[]>([]);
     const [showInfo, setShowInfo] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -112,6 +113,7 @@ export default function Page() {
     // }
 
     return (
+
         <main className="space-y-6">
             <header className="mb-4">
                 <div className="lg:flex justify-between items-center mb-6">
@@ -191,7 +193,7 @@ export default function Page() {
                 onToggleGroupBySiret={() => setGroupBySiret((v) => !v)}
             />
 
-            <Analytics />
+            {enableAnalytics && <Analytics />}
 
         </main>
     );
