@@ -222,7 +222,7 @@ export function PieChart({ data, selectedCategory, onCategoryClick, countByCateg
     // };
 
     return (
-        <div className="bg-white rounded-xl shadow p-6">
+        <div className="bg-white rounded-xl shadow p-2 sm:p-8">
             <h2 className="text-center lg:text-left text-xl font-semibold mb-4">
                 Répartition des montants par secteur d'activité
             </h2>
@@ -249,7 +249,7 @@ export function PieChart({ data, selectedCategory, onCategoryClick, countByCateg
                                     style={{ backgroundColor: item.color }}
                                     ></span>
                                     <div className="flex flex-col lg:flex-row gap-1">
-                                        <span className="p-0 m-0 border-0">
+                                        <span className="p-0 m-0 border-0 text-xs">
                                             <strong>{item.label}</strong> :{" "}
                                         </span>
                                         <span className="p-0 m-0 border-0">
