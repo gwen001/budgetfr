@@ -164,7 +164,7 @@ export function SubventionsTable({ data, selectedCategory, onResetCategory, sear
                     <div className="border-0">
                         {selectedCategory && (
                             <span className="text-sm text-gray-600 flex items-center">
-                            <strong className="ml-1">{selectedCategory}</strong>
+                            SA: <strong className="ml-1">{selectedCategory}</strong>
 
                             {/* Bouton reset */}
                             <button
