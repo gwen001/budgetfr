@@ -164,7 +164,7 @@ export function SubventionsTable({ data, selectedCategory, onResetCategory, sear
                     <div className="border-0">
                         {selectedCategory && (
                             <span className="text-sm text-gray-600 flex items-center">
-                            SA: <strong className="ml-1">{selectedCategory}</strong>
+                            sa: <strong className="ml-1">{selectedCategory}</strong>
 
                             {/* Bouton reset */}
                             <button
@@ -223,7 +223,7 @@ export function SubventionsTable({ data, selectedCategory, onResetCategory, sear
                                         rel="noopener noreferrer"
                                         className="text-green-600 hover:text-green-800"
                                         >
-                                            {/* <img src="/img/google.png" className="w-4 h-4"/> */}
+                                            {/* <img src="/img/google.png" height="16" width="16" /> */}
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 className="h-5 w-5"
@@ -239,6 +239,14 @@ export function SubventionsTable({ data, selectedCategory, onResetCategory, sear
                                                 />
                                             </svg>
                                         </a>
+                                        {/* <a
+                                        href={`https://www.helloasso.com/e/recherche?query=${s.nom_beneficiaire}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-green-600 hover:text-green-800"
+                                        >
+                                            <img src="/img/helloasso.png" height="16" width="16" />
+                                        </a> */}
                                         <span title={`${s.nom_beneficiaire}`}>{s.nom_beneficiaire.length > 50
                                             ? s.nom_beneficiaire.slice(0, 50) + "…"
                                             : s.nom_beneficiaire}
