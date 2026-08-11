@@ -172,15 +172,23 @@ export default function Page() {
                 />
             )}
 
-            <SubventionsTable
-                data={data}
-                selectedCategory={selectedCategory}
-                onResetCategory={() => { setSelectedCategory(null);  setSearchTerm(""); }}
-                searchTerm={searchTerm}
-                onSearchTermChange={setSearchTerm}
-                groupBySiret={groupBySiret}
-                onToggleGroupBySiret={() => setGroupBySiret((v) => !v)}
-            />
+            {loading ? (
+                <div className="bg-white rounded-xl shadow p-6">
+                    <div className="flex items-center justify-center h-100">
+                        <span className="text-gray-600">Chargement des données...</span>
+                    </div>
+                </div>
+            ) : (
+                <SubventionsTable
+                    data={data}
+                    selectedCategory={selectedCategory}
+                    onResetCategory={() => { setSelectedCategory(null);  setSearchTerm(""); }}
+                    searchTerm={searchTerm}
+                    onSearchTermChange={setSearchTerm}
+                    groupBySiret={groupBySiret}
+                    onToggleGroupBySiret={() => setGroupBySiret((v) => !v)}
+                />
+            )}
 
             {enableAnalytics && <Analytics />}
 
