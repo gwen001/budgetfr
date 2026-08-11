@@ -45,26 +45,6 @@ export function PieChart({ data, selectedCategory, onCategoryClick, countByCateg
         .sort((a, b) => b[1] - a[1]);
 
     const labels = sorted.map(([label]) => label);
-    // const values = sorted.map(([_, value]) => value);
-
-    // const values = labels.map((label) =>
-    //     hiddenSlices.includes(label)
-    //         ? null // 👈 segment masqué
-    //         : data.filter(
-    //             (s) =>
-    //                 (s.secteurs_d_activites_definies_par_l_association || "Non renseigné") === label
-    //         )
-    //         .reduce((sum, s) => sum + (s.montant_vote || 0), 0)
-    // );
-
-    // const realValues = labels.map((label) =>
-    //     data
-    //         .filter(
-    //         (s) =>
-    //             (s.secteurs_d_activites_definies_par_l_association || "Non renseigné") === label
-    //         )
-    //         .reduce((sum, s) => sum + (s.montant_vote || 0), 0)
-    //     );
 
     const realValues = labels.map((label) =>
         data
@@ -86,18 +66,6 @@ export function PieChart({ data, selectedCategory, onCategoryClick, countByCateg
             )
             .reduce((sum, s) => sum + (s.montant_vote || 0), 0)
         );
-
-
-    // const values = labels.map((label, index) =>
-    //   hiddenSlices.includes(label) ? null : realValues[index]
-    // );
-    // const values = labels.map((label, index) =>
-    //     hiddenSlices.includes(label) ? null : realValues[index]
-    // );
-
-    // const totalVisible = values
-    //     .filter((v) => v !== null)
-    //     .reduce((a, b) => a + b, 0);
 
     const chartData = {
         labels,
@@ -144,13 +112,6 @@ export function PieChart({ data, selectedCategory, onCategoryClick, countByCateg
             percent: ((realValues[index] / totalAll) * 100).toFixed(1),
         }))
         .sort((a, b) => b.value - a.value);
-
-    // const legend = labels.map((label, index) => ({
-    //     label,
-    //     value: values[index],
-    //     color: chartData.datasets[0].backgroundColor[index],
-    // }))
-    // .sort((a, b) => b.value - a.value);
 
     const options = {
         plugins: {
@@ -211,15 +172,6 @@ export function PieChart({ data, selectedCategory, onCategoryClick, countByCateg
             onCategoryClick(label); // 👈 sélection normale
         }
     };
-
-    // const options = {
-    //     onClick: (_: any, elements: any[]) => {
-    //         if (!elements.length) return;
-    //         const index = elements[0].index;
-    //         const category = labels[index] || null;
-    //         onCategoryClick(category);
-    //     },
-    // };
 
     return (
         <div className="bg-white rounded-xl shadow p-2 sm:p-8">

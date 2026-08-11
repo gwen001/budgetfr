@@ -54,64 +54,6 @@ export default function Page() {
         fetchData();
     }, [selectedYear]);
 
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         const params = new URLSearchParams();
-
-    //         if (selectedYears.length > 0) {
-    //         params.set("years", selectedYears.join(","));
-    //         }
-
-    //         const res = await fetch(`/api/subventions?${params.toString()}`);
-    //         const json = await res.json();
-
-    //         setData(json);
-    //     };
-
-    //     fetchData();
-    // }, [selectedYears]);
-
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         let query = supabase.from("subventions").select("*");
-
-    //         if (selectedYears.length > 0) {
-    //             query = query.in("annee", selectedYears);
-    //         }
-
-    //         const { data, error } = await query;
-
-    //         if (!error && data) {
-    //             setData(data);
-    //         }
-    //     };
-
-    //     fetchData();
-    // }, [selectedYears]);
-
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             const res = await fetch("/api/subventions");
-    //             const json = await res.json();
-    //             setData(json);
-    //         } catch (e) {
-    //             console.error(e);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
-    //     fetchData();
-    // }, []);
-
-    // if (loading) {
-    //     return (
-    //         <div className="flex items-center justify-center h-screen">
-    //         <span className="text-gray-600">Chargement des données…</span>
-    //         </div>
-    //     );
-    // }
-
     return (
 
         <main className="space-y-6">
@@ -128,7 +70,7 @@ export default function Page() {
                         </button>
                     </h1>
                     <div className="mt-3 lg:mt-0 lg:flex items-center text-center gap-6">
-                        {[2023, 2024, 2025].map((year) => (
+                        {[2022,2023, 2024, 2025].map((year) => (
                             <label key={year} className="ms-3 lg:ms-0 lg:flex items-center gap-2 cursor-pointer">
                                 <input
                                 type="radio"
