@@ -12,9 +12,11 @@ export default function Page() {
     const [showInfo, setShowInfo] = useState(false);
     const [loading, setLoading] = useState(true);
     const [selectedYear, setSelectedYear] = useState<number>(2025);
+    // const [selectedYears, setSelectedYears] = useState<number[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [groupBySiret, setGroupBySiret] = useState(false);
+
     const countByCategory = data.reduce((acc, s) => {
         const cat = s.secteurs_d_activites_definies_par_l_association || "Non renseigné";
         acc[cat] = (acc[cat] || 0) + 1;
@@ -26,7 +28,7 @@ export default function Page() {
 
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === "Escape") {
-            setShowInfo(false);
+                setShowInfo(false);
             }
         };
 
@@ -36,6 +38,27 @@ export default function Page() {
             window.removeEventListener("keydown", handleKeyDown);
         };
     }, [showInfo]);
+
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         setLoading(true);
+    //         try {
+    //             const params = selectedYears.length
+    //             ? `?years=${selectedYears.join(",")}`
+    //             : "";
+
+    //             const res = await fetch(`/api/subventions${params}`);
+    //             const json = await res.json();
+    //             setData(json);
+    //         } catch (e) {
+    //             console.error(e);
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
+
+    //     fetchData();
+    // }, [selectedYears]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -53,6 +76,14 @@ export default function Page() {
 
         fetchData();
     }, [selectedYear]);
+
+    // const toggleYear = (year: number) => {
+    //     setSelectedYears((prev) =>
+    //         prev.includes(year)
+    //         ? prev.filter((y) => y !== year)
+    //         : [...prev, year]
+    //     );
+    // };
 
     return (
 
@@ -84,6 +115,19 @@ export default function Page() {
                             </label>
                         ))}
                     </div>
+                    {/* <div className="  items-center gap-6">
+                        {[2022, 2023, 2024, 2025].map((year) => (
+                            <label key={year} className="ms-3 lg:ms-0 lg:flex items-center gap-2 cursor-pointer">
+                            <input
+                                type="checkbox"
+                                checked={true}
+                                onChange={() => toggleYear(year)}
+                                className="w-4 h-4"
+                            />
+                            <span>{year}</span>
+                            </label>
+                        ))}
+                    </div> */}
                 </div>
             </header>
 
