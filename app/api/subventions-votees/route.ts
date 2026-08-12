@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabase, Subvention } from "@/lib/supabase";
+import { supabase, SubventionVotee } from "@/lib/supabase";
 
 export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
@@ -39,5 +39,16 @@ export async function GET(req: Request) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json(data as Subvention[]);
+    // Convertir SubventionVotees[] → Subvention[]
+    // const converted = data.map((s) => ({
+    //     id: s.id,
+    //     annee: s.annee_budgetaire,
+    //     nom_beneficiaire: s.nom_beneficiaire,
+    //     numero_siret: s.numero_siret,
+    //     secteurs_d_activites: s.secteurs_d_activites_definies_par_l_association,
+    //     nature_juridique: null,
+    //     montant: s.montant_vote,
+    // }));
+
+    return NextResponse.json(data);
 }

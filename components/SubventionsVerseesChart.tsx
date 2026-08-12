@@ -9,19 +9,19 @@ import {
     Legend,
     TooltipItem
 } from "chart.js";
-import { Subvention } from "@/lib/supabase";
+import { SubventionVersee } from "@/lib/supabase";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 type Props = {
-    data: Subvention[];
+    data: SubventionVersee[];
     selectedCategory: string | null;
     onCategoryClick: (category: string | null) => void;
     countByCategory: Record<string, number>;
 };
 
 
-export function PieChart({ data, selectedCategory, onCategoryClick, countByCategory }: Props) {
+export default function SubventionsVerseesChart({ data, selectedCategory, onCategoryClick, countByCategory }: Props) {
 
     if (data.length === 0) {
         return (
@@ -33,8 +33,9 @@ export function PieChart({ data, selectedCategory, onCategoryClick, countByCateg
 
     // Agrégation des montants par catégorie
     const byCategory = data.reduce<Record<string, number>>((acc, s) => {
-        const key = s.secteurs_d_activites_definies_par_l_association || "Non renseigné";
-        acc[key] = (acc[key] || 0) + (s.montant_vote || 0);
+        const key = s.nature_juridique_du_beneficiaire || "Non renseigné";
+        // const key = s.secteurs_d_activites_definies_par_l_association || "Non renseigné";
+        acc[key] = (acc[key] || 0) + (s.montant_verse || 0);
         return acc;
     }, {});
 
@@ -50,9 +51,10 @@ export function PieChart({ data, selectedCategory, onCategoryClick, countByCateg
         data
             .filter(
             (s) =>
-                (s.secteurs_d_activites_definies_par_l_association || "Non renseigné") === label
+                // (s.secteurs_d_activites_definies_par_l_association || "Non renseigné") === label
+                (s.nature_juridique_du_beneficiaire || "Non renseigné") === label
             )
-            .reduce((sum, s) => sum + (s.montant_vote || 0), 0)
+            .reduce((sum, s) => sum + (s.montant_verse || 0), 0)
         );
 
     // 👉 total global, toutes catégories confondues
@@ -62,9 +64,10 @@ export function PieChart({ data, selectedCategory, onCategoryClick, countByCateg
         data
             .filter(
             (s) =>
-                (s.secteurs_d_activites_definies_par_l_association || "Non renseigné") === label
+                // (s.secteurs_d_activites_definies_par_l_association || "Non renseigné") === label
+                (s.nature_juridique_du_beneficiaire || "Non renseigné") === label
             )
-            .reduce((sum, s) => sum + (s.montant_vote || 0), 0)
+            .reduce((sum, s) => sum + (s.montant_verse || 0), 0)
         );
 
     const chartData = {
@@ -176,7 +179,7 @@ export function PieChart({ data, selectedCategory, onCategoryClick, countByCateg
     return (
         <div className="bg-white rounded-xl shadow p-2 sm:p-8">
             <h2 className="text-center lg:text-left text-xl font-semibold mb-4">
-                Répartition des montants par secteur d'activité
+                Répartition des montants par nature juridique
             </h2>
 
             <div className="flex flex-col lg:flex-row gap-6 border-0 items-center lg:items-start lg:justify-center">

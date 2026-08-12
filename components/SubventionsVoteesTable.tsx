@@ -1,7 +1,7 @@
-import { Subvention } from "@/lib/supabase";
+import { SubventionVotee } from "@/lib/supabase";
 
 type Props = {
-  data: Subvention[];
+  data: SubventionVotee[];
   selectedCategory: string | null;
   onResetCategory: () => void;
   searchTerm: string;
@@ -10,12 +10,11 @@ type Props = {
   onToggleGroupBySiret: () => void;
 };
 
-export function SubventionsTable({ data, selectedCategory, onResetCategory, searchTerm, onSearchTermChange, groupBySiret, onToggleGroupBySiret }: Props) {
+export default function SubventionsVoteesTable({ data, selectedCategory, onResetCategory, searchTerm, onSearchTermChange, groupBySiret, onToggleGroupBySiret }: Props) {
   // Filtrer par catégorie
   const filtered = selectedCategory
     ? data.filter(
         (s) =>
-        //   (s.secteurs_d_activites_definies_par_l_association || "Non renseigné") === selectedCategory
           s.secteurs_d_activites_definies_par_l_association === selectedCategory
       )
     : data;
@@ -23,7 +22,7 @@ export function SubventionsTable({ data, selectedCategory, onResetCategory, sear
     let rows: any[] = [];
 
     if (groupBySiret) {
-        // ✅ mode groupé par SIRET
+        // mode groupé par SIRET
         const grouped = filtered.reduce((acc, s) => {
             const key = s.numero_siret || "Non renseigné";
 
@@ -45,54 +44,9 @@ export function SubventionsTable({ data, selectedCategory, onResetCategory, sear
 
         rows = Object.values(grouped);
     } else {
-        // ✅ mode non groupé : on affiche directement les subventions filtrées
+        // mode non groupé : on affiche directement les subventions filtrées
         rows = filtered;
     }
-
-    // const grouped = filtered.reduce((acc, s) => {
-    //     const key = groupBySiret
-    //         ? s.numero_siret || "Non renseigné"
-    //         : s.nom_beneficiaire || "Non renseigné";
-
-    //     if (!acc[key]) {
-    //         acc[key] = {
-    //         nom_beneficiaire: s.nom_beneficiaire || "Non renseigné",
-    //         numero_siret: s.numero_siret || "Non renseigné",
-    //         montant_total: 0,
-    //         lignes: [],
-    //         };
-    //     }
-
-    //     acc[key].montant_total += s.montant_vote || 0;
-    //     acc[key].lignes.push(s);
-
-    //     return acc;
-    // }, {} as Record<string, any>);
-
-
-    // const grouped = filtered.reduce<Record<string, {
-    //     nom_beneficiaire: string | "Non renseigné";
-    //     montant_total: number;
-    //     annee_budgetaire: number | null;
-    //     secteurs_d_activites_definies_par_l_association: string | null;
-    //     numero_siret: string | null;
-    // }>>((acc, s) => {
-    //     const key = s.numero_siret || "-";
-
-    //     if (!acc[key]) {
-    //         acc[key] = {
-    //             nom_beneficiaire: s.nom_beneficiaire || "Non renseigné",
-    //             montant_total: 0,
-    //             annee_budgetaire: s.annee_budgetaire,
-    //             secteurs_d_activites_definies_par_l_association: s.secteurs_d_activites_definies_par_l_association,
-    //             numero_siret: key,
-    //         };
-    //     }
-
-    //     acc[key].montant_total += s.montant_vote || 0;
-
-    //     return acc;
-    // }, {});
 
     const sorted = Object.values(rows).sort(
         (a, b) => b.montant_vote - a.montant_vote

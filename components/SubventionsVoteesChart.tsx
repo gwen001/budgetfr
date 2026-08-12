@@ -7,17 +7,30 @@ import {
     ArcElement,
     Tooltip,
     Legend,
+    TooltipItem
 } from "chart.js";
-import { Subvention } from "@/lib/supabase";
+import { SubventionVotee } from "@/lib/supabase";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 type Props = {
-    data: Subvention[];
+    data: SubventionVotee[];
+    selectedCategory: string | null;
     onCategoryClick: (category: string | null) => void;
+    countByCategory: Record<string, number>;
 };
 
-export function PieChart({ data, onCategoryClick }: Props) {
+
+export default function SubventionsVoteesChart({ data, selectedCategory, onCategoryClick, countByCategory }: Props) {
+
+    if (data.length === 0) {
+        return (
+            <div className="bg-white rounded-xl shadow w-full h-64 flex items-center justify-center text-gray-500">
+                Données indisponibles
+            </div>
+        );
+    }
+
     // Agrégation des montants par catégorie
     const byCategory = data.reduce<Record<string, number>>((acc, s) => {
         const key = s.secteurs_d_activites_definies_par_l_association || "Non renseigné";
@@ -32,26 +45,6 @@ export function PieChart({ data, onCategoryClick }: Props) {
         .sort((a, b) => b[1] - a[1]);
 
     const labels = sorted.map(([label]) => label);
-    // const values = sorted.map(([_, value]) => value);
-
-    // const values = labels.map((label) =>
-    //     hiddenSlices.includes(label)
-    //         ? null // 👈 segment masqué
-    //         : data.filter(
-    //             (s) =>
-    //                 (s.secteurs_d_activites_definies_par_l_association || "Non renseigné") === label
-    //         )
-    //         .reduce((sum, s) => sum + (s.montant_vote || 0), 0)
-    // );
-
-    // const realValues = labels.map((label) =>
-    //     data
-    //         .filter(
-    //         (s) =>
-    //             (s.secteurs_d_activites_definies_par_l_association || "Non renseigné") === label
-    //         )
-    //         .reduce((sum, s) => sum + (s.montant_vote || 0), 0)
-    //     );
 
     const realValues = labels.map((label) =>
         data
@@ -65,16 +58,14 @@ export function PieChart({ data, onCategoryClick }: Props) {
     // 👉 total global, toutes catégories confondues
     const totalAll = realValues.reduce((a, b) => a + b, 0);
 
-    const values = labels.map((label, index) =>
-      hiddenSlices.includes(label) ? null : realValues[index]
-    );
-    // const values = labels.map((label, index) =>
-    //     hiddenSlices.includes(label) ? null : realValues[index]
-    // );
-
-    const totalVisible = values
-        .filter((v) => v !== null)
-        .reduce((a, b) => a + b, 0);
+    const values = labels.map((label) =>
+        data
+            .filter(
+            (s) =>
+                (s.secteurs_d_activites_definies_par_l_association || "Non renseigné") === label
+            )
+            .reduce((sum, s) => sum + (s.montant_vote || 0), 0)
+        );
 
     const chartData = {
         labels,
@@ -122,13 +113,6 @@ export function PieChart({ data, onCategoryClick }: Props) {
         }))
         .sort((a, b) => b.value - a.value);
 
-    // const legend = labels.map((label, index) => ({
-    //     label,
-    //     value: values[index],
-    //     color: chartData.datasets[0].backgroundColor[index],
-    // }))
-    // .sort((a, b) => b.value - a.value);
-
     const options = {
         plugins: {
             legend: {
@@ -138,23 +122,27 @@ export function PieChart({ data, onCategoryClick }: Props) {
                 borderColor: "white",
                 borderWidth: 1,
                 callbacks: {
-                    title: function (context) {
+                    title: function (context: TooltipItem<"pie">[]) {
                         const item = context[0];
-                        const value = item.raw;
+                        const value = item.raw as number;
                         // const total = item.chart._metasets[0].total;
-                        const percent = ((value / totalAll) * 100).toFixed(1);
-                        return `${item.label}`;
-                        return `${item.label} (${percent} %)`;
+                        // const percent = ((value / totalAll) * 100).toFixed(1);
+                        const label = item.label || "Non renseigné";                        // const label = label || "Non renseigné";
+                        const count = countByCategory[label] || 0;
+                        // return `${item.label}`;
+                        return `${item.label} - ${count} subventions`;
                     },
-                    label: function (context) {
-                        const value = context.raw || 0;
+                    label: function (context: TooltipItem<"pie">) {
+                        const value = context.raw as number;
                         // const total = context.chart._metasets[0].total;
                         const percent = ((value / totalAll) * 100).toFixed(1);
+                        // const label = context.label || "Non renseigné";                        // const label = label || "Non renseigné";
+                        // const count = countByCategory[label] || 0;
                         return (
                             " " +
                             value.toLocaleString("fr-FR", { minimumFractionDigits: 0 }) +
                             " eur " +
-                            `(${percent} %)`
+                            `- ${percent}%`
                         );
                     },
                 },
@@ -177,48 +165,53 @@ export function PieChart({ data, onCategoryClick }: Props) {
         );
     };
 
-    // const options = {
-    //     onClick: (_: any, elements: any[]) => {
-    //         if (!elements.length) return;
-    //         const index = elements[0].index;
-    //         const category = labels[index] || null;
-    //         onCategoryClick(category);
-    //     },
-    // };
+    const handleLegendClick = (label: string) => {
+        if (selectedCategory === label) {
+            onCategoryClick(null); // 👈 re-clic = reset
+        } else {
+            onCategoryClick(label); // 👈 sélection normale
+        }
+    };
 
     return (
-        <div className="bg-white rounded-xl shadow p-6">
-            <h2 className="text-xl font-semibold mb-4">
+        <div className="bg-white rounded-xl shadow p-2 sm:p-8">
+            <h2 className="text-center lg:text-left text-xl font-semibold mb-4">
                 Répartition des montants par secteur d'activité
             </h2>
 
-            <div className="flex gap-6 items-start border-0 justify-center">
-                <div className="w-1/2 border-0">
+            <div className="flex flex-col lg:flex-row gap-6 border-0 items-center lg:items-start lg:justify-center">
+                <div className="w-2/3 lg:w-1/2 border-0">
                     <Pie data={chartData} options={options} />
                 </div>
-                <div className="w-1/3 text-xs border-0">
-                    <div className="bg-white p-4">
-                        {legend.map((item) => (
+                <div className="w-full lg:w-1/3 text-xs justify-center border-0 grid grid-cols-2 lg:grid-cols-1">
+                    {legend.map((item,index) => (
                             <div
                                 key={item.label}
-                                className="flex items-center gap-2 mb-1 cursor-pointer"
-                                onClick={() => toggleSlice(item.label)}
+                                className={
+                                    "flex items-center justify-between gap-2 cursor-pointer p-1 rounded " +
+                                    (selectedCategory === item.label
+                                    ? "bg-blue-100"
+                                    : "hover:bg-gray-100")
+                                }
+                                onClick={() => handleLegendClick(item.label)}
                                 >
-                                <span
-                                    className="inline-block w-3 h-3 rounded"
-                                    style={{
-                                    backgroundColor: item.color,
-                                    opacity: hiddenSlices.includes(item.label) ? 0.3 : 1,
-                                    }}
-                                ></span>
-                                <span className={ hiddenSlices.includes(item.label) ? "text-gray-400 line-through" : ""}>
-                                    <strong>{item.label}</strong> :{" "}
-                                    {item.value.toLocaleString("fr-FR")} eur{" "}
-                                    <span className="text-gray-600">({item.percent}%)</span>
-                                </span>
+                                <div className="flex items-center gap-2"> {/* Pastille couleur */}
+                                    <span
+                                    className="inline-block w-3 h-3 rounded mb-5 lg:mb-0"
+                                    style={{ backgroundColor: item.color }}
+                                    ></span>
+                                    <div className="flex flex-col lg:flex-row gap-1">
+                                        <span className="p-0 m-0 border-0 text-xs">
+                                            <strong>{item.label}</strong> :{" "}
+                                        </span>
+                                        <span className="p-0 m-0 border-0">
+                                            {item.value.toLocaleString("fr-FR")} eur{" "}
+                                            {/* <span className="text-gray-600">({item.percent} %)</span> */}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         ))}
-                    </div>
                 </div>
             </div>
         </div>

@@ -45,13 +45,17 @@ export const metadata = {
     },
 };
 
+import { Analytics } from "@vercel/analytics/next"
+
 export default function RootLayout({ children }: { children: ReactNode }) {
+    const enableAnalytics = process.env.NEXT_PUBLIC_ENABLE_ANALYTICS === "true";
     return (
         <html lang="fr">
             <body className="min-h-screen">
                 <div className="max-w-6xl mx-auto py-8">
                     {children}
                 </div>
+                {enableAnalytics && <Analytics />}
             </body>
         </html>
     );

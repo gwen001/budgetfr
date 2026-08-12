@@ -1,197 +1,31 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Subvention } from "@/lib/supabase";
-import { PieChart } from "@/components/PieChart";
-import { SubventionsTable } from "@/components/SubventionsTable";
-import { Analytics } from "@vercel/analytics/next"
+import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export default function Page() {
-    const enableAnalytics = process.env.NEXT_PUBLIC_ENABLE_ANALYTICS === "true";
-    const [data, setData] = useState<Subvention[]>([]);
-    const [showInfo, setShowInfo] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const [selectedYear, setSelectedYear] = useState<number>(2025);
-    // const [selectedYears, setSelectedYears] = useState<number[]>([]);
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [groupBySiret, setGroupBySiret] = useState(false);
+    const ENABLE_REDIRECT = true;
 
-    const countByCategory = data.reduce((acc, s) => {
-        const cat = s.secteurs_d_activites_definies_par_l_association || "Non renseigné";
-        acc[cat] = (acc[cat] || 0) + 1;
-        return acc;
-    }, {} as Record<string, number>);
-
-    useEffect(() => {
-        if (!showInfo) return;
-
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === "Escape") {
-                setShowInfo(false);
-            }
-        };
-
-        window.addEventListener("keydown", handleKeyDown);
-
-        return () => {
-            window.removeEventListener("keydown", handleKeyDown);
-        };
-    }, [showInfo]);
-
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         setLoading(true);
-    //         try {
-    //             const params = selectedYears.length
-    //             ? `?years=${selectedYears.join(",")}`
-    //             : "";
-
-    //             const res = await fetch(`/api/subventions${params}`);
-    //             const json = await res.json();
-    //             setData(json);
-    //         } catch (e) {
-    //             console.error(e);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
-
-    //     fetchData();
-    // }, [selectedYears]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                const res = await fetch(`/api/subventions?year=${selectedYear}`);
-                const json = await res.json();
-                setData(json);
-            } catch (e) {
-                console.error(e);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-    }, [selectedYear]);
-
-    // const toggleYear = (year: number) => {
-    //     setSelectedYears((prev) =>
-    //         prev.includes(year)
-    //         ? prev.filter((y) => y !== year)
-    //         : [...prev, year]
-    //     );
-    // };
+    if (ENABLE_REDIRECT) {
+        redirect("/subventions-votees");
+    }
 
     return (
+        <div className="p-0">
+            <h1 className="text-3xl font-bold mb-6">BudgetFR</h1>
 
-        <main className="space-y-6">
-            <header className="mb-4">
-                <div className="lg:flex justify-between items-center mb-6">
-                    <h1 className="text-2xl sm:text-3xl font-bold text-center lg:text-left lg:flex items-center gap-4">
-                        Subventions aux associations (Paris)
-                        <button
-                            onClick={() => setShowInfo(true)}
-                            className="ms-4 lg:ms-0 align-middle cursor-pointer w-6 h-6 lg:flex items-center justify-center rounded-full bg-black text-white text-sm font-bold"
-                            aria-label="Informations"
-                            >
-                            ?
-                        </button>
-                    </h1>
-                    <div className="mt-3 lg:mt-0 lg:flex items-center text-center gap-6">
-                        {[2022,2023, 2024, 2025].map((year) => (
-                            <label key={year} className="ms-3 lg:ms-0 lg:flex items-center gap-2 cursor-pointer">
-                                <input
-                                type="radio"
-                                name="year-filter"
-                                value={year}
-                                checked={selectedYear === year}
-                                onChange={() => setSelectedYear(year)}
-                                className="w-4 h-4"
-                                />
-                                <span className="ms-1 lg:ms-0">{year}</span>
-                            </label>
-                        ))}
-                    </div>
-                    {/* <div className="  items-center gap-6">
-                        {[2022, 2023, 2024, 2025].map((year) => (
-                            <label key={year} className="ms-3 lg:ms-0 lg:flex items-center gap-2 cursor-pointer">
-                            <input
-                                type="checkbox"
-                                checked={true}
-                                onChange={() => toggleYear(year)}
-                                className="w-4 h-4"
-                            />
-                            <span>{year}</span>
-                            </label>
-                        ))}
-                    </div> */}
-                </div>
-            </header>
-
-            {showInfo && (
-                <div
-                    className="fixed inset-0 bg-black/70 flex items-center justify-center z-50"
-                    onClick={() => setShowInfo(false)}   // 👈 clic sur le fond = fermer
-                >
-                    <div
-                    className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full text-sm md:text-base text-gray-700"
-                    onClick={(e) => e.stopPropagation()}   // 👈 clic dans la popup = ne pas fermer
-                    >
-                        <h2 className="text-lg md:text-xl font-semibold mb-4 text-gray-900">Liste des subventions aux associations votées par la ville de Paris.</h2>
-                        <p className="mb-6">
-                            Sont considérées comme bénéficiaires de subvention les associations relevant de la loi du 1er juillet 1901 ayant déposé par exercice budgétaire une ou plusieurs demandes de subvention auprès de la ville de Paris.
-                        </p>
-                        <p className="mb-6">
-                            Données extraites de <a href="https://opendata.paris.fr/" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">Paris | DATA</a>, site officiel de la démarche Open Data de la ville de Paris.
-                        </p>
-                        <p className="mb-6 text-red-600">
-                            Aucune donnée n'a été altérée. Toutes les données sont retranscrites telles quelles, y compris les secteurs d'activité.
-                        </p>
-                        <button onClick={() => setShowInfo(false)} className="px-4 py-2 bg-black text-white rounded hover:cursor-pointer hover:bg-gray-800">
-                            Fermer
-                        </button>
-                    </div>
-                </div>
-            )}
-
-            {loading ? (
-                <div className="bg-white rounded-xl shadow p-6">
-                    <div className="flex items-center justify-center h-100">
-                        <span className="text-gray-600">Chargement des données...</span>
-                    </div>
-                </div>
-            ) : (
-                <PieChart
-                    data={data}
-                    selectedCategory={selectedCategory}
-                    onCategoryClick={(cat) => { setSelectedCategory(cat); setSearchTerm(""); }}
-                    countByCategory={countByCategory}
-                />
-            )}
-
-            {loading ? (
-                <div className="bg-white rounded-xl shadow p-6">
-                    <div className="flex items-center justify-center h-100">
-                        <span className="text-gray-600">Chargement des données...</span>
-                    </div>
-                </div>
-            ) : (
-                <SubventionsTable
-                    data={data}
-                    selectedCategory={selectedCategory}
-                    onResetCategory={() => { setSelectedCategory(null);  setSearchTerm(""); }}
-                    searchTerm={searchTerm}
-                    onSearchTermChange={setSearchTerm}
-                    groupBySiret={groupBySiret}
-                    onToggleGroupBySiret={() => setGroupBySiret((v) => !v)}
-                />
-            )}
-
-            {enableAnalytics && <Analytics />}
-
-        </main>
-    );
+            <ul className="list-disc pl-6 space-y-2">
+                <li>
+                    <Link href="/subventions-votees" className="text-blue-600 underline">
+                        Subventions aux associations
+                    </Link>
+                </li>
+                <li>
+                    <Link href="/subventions-versees" className="text-blue-600 underline">
+                        Subventions versées annexes
+                    </Link>
+                </li>
+            </ul>
+        </div>
+  );
 }
