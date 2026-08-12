@@ -61,7 +61,7 @@ export default function SubventionsVoteesView() {
                          <DataSelector dataset="subventions-votees" />
                          <InfoButton onClick={() => setShowInfo(true)} />
                      </div>
-                    <YearSelector years={[2022, 2023, 2024]} selectedYear={selectedYear} onChange={setSelectedYear} />
+                    <YearSelector years={[2022, 2023, 2024, 2025]} selectedYear={selectedYear} onChange={setSelectedYear} />
                  </div>
              </header>
 
