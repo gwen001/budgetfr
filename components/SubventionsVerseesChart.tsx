@@ -75,6 +75,8 @@ export default function SubventionsVerseesChart({ data, selectedCategory, onCate
         datasets: [
             {
                 data: values,
+                borderColor: "#ffffff",
+                borderWidth: 2,
                 backgroundColor: [
                     "#DD0000",
                     "#FFCC00",

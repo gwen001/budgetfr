@@ -6,18 +6,19 @@ import Loader from "@/components/Loader";
 import YearSelector from "@/components/YearSelector";
 import DataSelector from "@/components/DataSelector";
 import InfoButton from "@/components/InfoButton";
-import InfoParisData from "@/components/InfoParisData";
+import InfoPopup from "@/components/InfoParisData";
 import SubventionsVoteesChart from "@/components/SubventionsVoteesChart";
 import SubventionsVoteesTable from "@/components/SubventionsVoteesTable";
 
 export default function SubventionsVoteesView() {
     const [loading, setLoading] = useState(false);
     const [selectedYear, setSelectedYear] = useState(2025);
+    const [showInfo, setShowInfo] = useState(false);
+
     const [data, setData] = useState<SubventionVotee[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [groupBySiret, setGroupBySiret] = useState(false);
-    const [showInfo, setShowInfo] = useState(false);
 
     const countByCategory = data.reduce((acc, s) => {
         const cat = s.secteurs_d_activites_definies_par_l_association || "Non renseigné";
@@ -65,7 +66,7 @@ export default function SubventionsVoteesView() {
                  </div>
              </header>
 
-             <InfoParisData open={showInfo} onClose={() => setShowInfo(false)} />
+             <InfoPopup open={showInfo} onClose={() => setShowInfo(false)} />
 
             {loading ? (
                 <Loader />
@@ -84,7 +85,7 @@ export default function SubventionsVoteesView() {
                 <SubventionsVoteesTable
                     data={data}
                     selectedCategory={selectedCategory}
-                    onResetCategory={() => { setSelectedCategory(null);  setSearchTerm(""); }}
+                    onResetCategory={() => { setSelectedCategory(null); setSearchTerm(""); }}
                     searchTerm={searchTerm}
                     onSearchTermChange={setSearchTerm}
                     groupBySiret={groupBySiret}

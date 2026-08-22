@@ -6,9 +6,13 @@ import Loader from "@/components/Loader";
 import YearSelector from "@/components/YearSelector";
 import DataSelector from "@/components/DataSelector";
 import InfoButton from "@/components/InfoButton";
-import InfoParisData from "@/components/InfoParisData";
+import InfoPopup from "@/components/InfoParisData";
 import SubventionsVerseesChart from "@/components/SubventionsVerseesChart";
 import SubventionsVerseesTable from "@/components/SubventionsVerseesTable";
+
+export const metadata = {
+    title: "gniiiiiiiii",
+};
 
 export default function SubventionsVerseesView() {
     const [loading, setLoading] = useState(false);
@@ -65,7 +69,7 @@ export default function SubventionsVerseesView() {
                  </div>
              </header>
 
-             <InfoParisData open={showInfo} onClose={() => setShowInfo(false)} />
+             <InfoPopup open={showInfo} onClose={() => setShowInfo(false)} />
 
             {loading ? (
                 <Loader />
@@ -84,7 +88,7 @@ export default function SubventionsVerseesView() {
                 <SubventionsVerseesTable
                     data={data}
                     selectedCategory={selectedCategory}
-                    onResetCategory={() => { setSelectedCategory(null);  setSearchTerm(""); }}
+                    onResetCategory={() => { setSelectedCategory(null); setSearchTerm(""); }}
                     searchTerm={searchTerm}
                     onSearchTermChange={setSearchTerm}
                     groupBySiret={groupBySiret}

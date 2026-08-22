@@ -1,23 +1,23 @@
 import { SubventionVotee } from "@/lib/supabase";
 
 type Props = {
-  data: SubventionVotee[];
-  selectedCategory: string | null;
-  onResetCategory: () => void;
-  searchTerm: string;
-  onSearchTermChange: (value: string) => void;
-  groupBySiret: boolean;
-  onToggleGroupBySiret: () => void;
+    data: SubventionVotee[];
+    selectedCategory: string | null;
+    onResetCategory: () => void;
+    searchTerm: string;
+    onSearchTermChange: (value: string) => void;
+    groupBySiret: boolean;
+    onToggleGroupBySiret: () => void;
 };
 
 export default function SubventionsVoteesTable({ data, selectedCategory, onResetCategory, searchTerm, onSearchTermChange, groupBySiret, onToggleGroupBySiret }: Props) {
-  // Filtrer par catégorie
-  const filtered = selectedCategory
-    ? data.filter(
-        (s) =>
-          s.secteurs_d_activites_definies_par_l_association === selectedCategory
-      )
-    : data;
+    // Filtrer par catégorie
+    const filtered = selectedCategory
+        ? data.filter(
+            (s) =>
+            s.secteurs_d_activites_definies_par_l_association === selectedCategory
+        )
+        : data;
 
     let rows: any[] = [];
 
@@ -56,7 +56,6 @@ export default function SubventionsVoteesTable({ data, selectedCategory, onReset
         s.nom_beneficiaire.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    // const total = sorted.reduce((sum, s) => sum + s.montant_total, 0);
     const total = filteredBySearch.reduce((sum, s) => sum + s.montant_vote, 0);
 
     const totalCount = data.length;
@@ -164,7 +163,7 @@ export default function SubventionsVoteesTable({ data, selectedCategory, onReset
                     <tbody>
                         {filteredBySearch.map((s, index) => (
                             <tr key={index} className="border-b">
-                                <td className="px-4 py-2 text-center hidden sm:block">{index + 1}</td>
+                                <td className="px-4 py-2 text-center hidden sm:table-cell">{index + 1}</td>
                                 <td className="px-4 py-2">{s.secteurs_d_activites_definies_par_l_association ?? "-"}</td>
                                 <td className="px-4 py-2 hidden md:block">
                                     <a href={`https://annuaire-entreprises.data.gouv.fr/entreprise/aaa-${s.numero_siret?.slice(0,9)}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{s.numero_siret ?? "-"}</a>
@@ -201,8 +200,9 @@ export default function SubventionsVoteesTable({ data, selectedCategory, onReset
                                         >
                                             <img src="/img/helloasso.png" height="16" width="16" />
                                         </a> */}
-                                        <span title={`${s.nom_beneficiaire}`}>{s.nom_beneficiaire.length > 50
-                                            ? s.nom_beneficiaire.slice(0, 50) + "…"
+                                        <span title={`${s.nom_beneficiaire}`}>
+                                            {s.nom_beneficiaire.length > 50
+                                            ? s.nom_beneficiaire.slice(0, 50) + "..."
                                             : s.nom_beneficiaire}
                                         </span>
                                         {groupBySiret ? " ("+s.lignes.length+")" : ""}

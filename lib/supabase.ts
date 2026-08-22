@@ -30,3 +30,61 @@ export type SubventionVersee = {
     prestations_en_nature: number | null;
     montant_verse: number | null;
 };
+
+export type ResponsableDeclaration = {
+  id: number;
+  responsable_public: number;
+  employeur: string;
+  description: string;
+  annee: number;
+  montant: number;
+  categorie: string;
+};
+
+export type ResponsablePublic = {
+  id: number;
+  civilite: string;
+  nom: string;
+  prenom: string;
+  date_naissance: string;
+  photo: string;
+  declarations: ResponsableDeclaration[];
+};
+
+export type ResponsableRemuneration = {
+    id: number;
+    responsable_public: number;
+    employeur: string | null;
+    description: string | null;
+    annee: number;
+    montant: number;
+    dto: string;
+    fonction: {
+        id: number;
+        nom: string;
+    } | null;
+    responsable: {
+        id: number;
+        civilite: string;
+        nom: string;
+        prenom: string;
+        photo: string | null;
+    };
+};
+
+export type ResponsableRemunerationCompute = {
+    responsableId: number;
+    civilite: string;
+    nom: string;
+    prenom: string;
+    photo: string | null;
+    employeur: string | null;
+    description: string | null;
+    montant: number;
+    annee: number;
+    fonctionId: number | null;
+    fonctionNom: string;
+    textCNP: string;
+    textED: string;
+};
+

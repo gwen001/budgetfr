@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 
 type Props = {
-    dataset: "subventions-votees" | "subventions-versees";
+    dataset: string;
 };
 
 export default function DatasetSelector({ dataset }: Props) {
@@ -21,6 +21,8 @@ export default function DatasetSelector({ dataset }: Props) {
         >
             <option value="subventions-votees">Subventions aux associations votées</option>
             <option value="subventions-versees">Subventions versées - annexe compte administratif</option>
+            <option value="responsables-publics">Rémunérations des responsables publics</option>
+            {/* <option value="responsables-publics-remunerations">Rémunérations des responsables publics par fonction</option> */}
         </select>
     );
 }

@@ -57,7 +57,6 @@ export default function SubventionsVerseesTable({ data, selectedCategory, onRese
         s.nom_organisme_beneficiaire.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    // const total = sorted.reduce((sum, s) => sum + s.montant_total, 0);
     const total = filteredBySearch.reduce((sum, s) => sum + s.montant_verse, 0);
 
     const totalCount = data.length;
@@ -163,7 +162,7 @@ export default function SubventionsVerseesTable({ data, selectedCategory, onRese
                     <tbody>
                         {filteredBySearch.map((s, index) => (
                             <tr key={index} className="border-b">
-                                <td className="px-4 py-2 text-center hidden sm:block">{index + 1}</td>
+                                <td className="px-4 py-2 text-center hidden sm:table-cell">{index + 1}</td>
                                 <td className="px-4 py-2">{s.nature_juridique_du_beneficiaire ?? "-"}</td>
                                 <td className="px-4 py-2">
                                     <div className="flex items-center gap-2">
@@ -188,8 +187,9 @@ export default function SubventionsVerseesTable({ data, selectedCategory, onRese
                                                 />
                                             </svg>
                                         </a>
-                                        <span title={`${s.nom_organisme_beneficiaire}`}>{s.nom_organisme_beneficiaire.length > 50
-                                            ? s.nom_organisme_beneficiaire.slice(0, 50) + "…"
+                                        <span title={`${s.nom_organisme_beneficiaire}`}>
+                                            {s.nom_organisme_beneficiaire.length > 50
+                                            ? s.nom_organisme_beneficiaire.slice(0, 50) + "..."
                                             : s.nom_organisme_beneficiaire}
                                         </span>
                                         {groupBySiret ? " ("+s.lignes.length+")" : ""}

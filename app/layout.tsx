@@ -2,7 +2,7 @@ import "@/styles/globals.css";
 import type { ReactNode } from "react";
 
 export const metadata = {
-    title: "Subventions aux associations",
+    title: "BudgetFR - Statistiques budgétaires Françaises",
     description: "Statistiques des subventions votées par la ville de Paris",
     keywords: [
         "data",

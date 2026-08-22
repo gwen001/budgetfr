@@ -20,7 +20,6 @@ type Props = {
     countByCategory: Record<string, number>;
 };
 
-
 export default function SubventionsVoteesChart({ data, selectedCategory, onCategoryClick, countByCategory }: Props) {
 
     if (data.length === 0) {
@@ -72,6 +71,8 @@ export default function SubventionsVoteesChart({ data, selectedCategory, onCateg
         datasets: [
             {
                 data: values,
+                borderColor: "#ffffff",
+                borderWidth: 2,
                 backgroundColor: [
                     "#DD0000",
                     "#FF3300",
@@ -97,7 +98,6 @@ export default function SubventionsVoteesChart({ data, selectedCategory, onCateg
                     "#FF66CC",
                     "#FF99CC",
                     "#FFCCFF",
-
                 ],
             },
         ],
