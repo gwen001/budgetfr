@@ -24,7 +24,13 @@ export function buildPhotoFilename(nom: string, prenom: string): string {
   return `${nomClean}-${prenomClean}.jpg`;
 }
 
-export default function ResponsablesPublicsCard({ responsable, isFirst }) {
+type Props = {
+    responsable: ResponsablePublic;
+    isFirst: boolean;
+};
+
+
+export default function ResponsablesPublicsCard({responsable, isFirst }: Props) {
     const age =
         new Date().getFullYear() -
         new Date(responsable.date_naissance).getFullYear();

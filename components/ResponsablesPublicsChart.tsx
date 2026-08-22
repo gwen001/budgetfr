@@ -3,12 +3,25 @@
 import { Bar } from "react-chartjs-2";
 import { ResponsableDeclaration } from "@/lib/supabase";
 import {
-  Chart as ChartJS,
-  BarElement,
-  CategoryScale,
-  LinearScale,
-  Tooltip
+    Chart as ChartJS,
+    ChartOptions,
+    BarElement,
+    CategoryScale,
+    LinearScale,
+    Tooltip,
+    TooltipModel,
+    TooltipItem,
+    ChartDataset,
+    Scale,
+    Tick,
 } from "chart.js";
+
+// type TickContext = {
+//   chart: ChartJS;
+//   index: number;
+//   scale: Scale;
+//   tick: any; // Chart.js ne typait pas les ticks avant v4.4
+// };
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip);
 
@@ -78,41 +91,16 @@ export default function ResponsablesPublicsChart({ declarations }: { declaration
 
       // Palette de couleurs pour chaque rémunération
     const STACK_COLORS = [
-                    // "#DD0000",
-                    // "#FF3300",
-                    // "#FF6600",
-                    // "#FF9900",
-                    // "#FFCC00",
-                    // "#EEEE00",
-                    // "#CCFF00",
-                    // "#99FF00",
-                    // "#00FF99",
-                    // "#00FFCC",
-                    // "#00FFFF",
-                    // "#00CCFF",
-                    // "#0099FF",
-                    // "#0066FF",
-                    // "#0000FF",
-                    // "#3300CC",
-                    // "#6600CC",
-                    // "#9900CC",
-                    // "#CC00CC",
-                    // "#FF00CC",
-                    // "#FF33CC",
-                    // "#FF66CC",
-                    // "#FF99CC",
-                    // "#FFCCFF",
-
-                    "#EF4444",
-                    "#F59E0B",
-                    "#EEEE00",
-                    "#10B981",
-                    "#00CCFF",
-                    "#3B82F6",
-                    "#1E3A8A",
-                    "#8B5CF6",
-                    "#D946EF",
-                    "#FF99CC",
+        "#EF4444",
+        "#F59E0B",
+        "#EEEE00",
+        "#10B981",
+        "#00CCFF",
+        "#3B82F6",
+        "#1E3A8A",
+        "#8B5CF6",
+        "#D946EF",
+        "#FF99CC",
     ];
 
     const byYear = lastYears.map((year) =>
@@ -120,10 +108,6 @@ export default function ResponsablesPublicsChart({ declarations }: { declaration
           .filter((d) => d.annee === year)
           .sort((a, b) => b.montant - a.montant)
     );
-
-    // const byYear = lastYears.map((year) =>
-    //   declarations.filter((d) => d.annee === year)
-    // );
 
     const maxStacks = Math.max(...byYear.map((arr) => arr.length));
 
@@ -152,7 +136,7 @@ export default function ResponsablesPublicsChart({ declarations }: { declaration
       datasets,
     };
 
-    function externalTooltipHandler(context) {
+    function externalTooltipHandler(context: { chart: ChartJS; tooltip: TooltipModel<"pie"> }) {
         const {chart, tooltip} = context;
 
         // Créer l'élément si nécessaire
@@ -173,19 +157,6 @@ export default function ResponsablesPublicsChart({ declarations }: { declaration
         }
 
         // Contenu
-        // if (tooltip.body) {
-        //     const titleLines = tooltip.title || [];
-        //     const bodyLines = tooltip.body.map(b => b.lines).flat();
-
-        //     tooltipEl.innerHTML = `
-        //       <div class="font-semibold mb-1">
-        //         ${titleLines.join("<br>")}
-        //       </div>
-        //       <div>
-        //         ${bodyLines.join("<br>")}
-        //       </div>
-        //     `;
-        // }
         if (tooltip.body) {
             const titleLines = tooltip.title || [];
             const body = tooltip.body.map(b => b.lines).flat();
@@ -232,103 +203,85 @@ export default function ResponsablesPublicsChart({ declarations }: { declaration
         tooltipEl.style.zIndex = "9999";
     }
 
+    const options: ChartOptions<"bar"> = {
+        maintainAspectRatio: false,
+        // devicePixelRatio: 1,
+        plugins: {
+            legend: {
+                display: false,
+            },
+            tooltip: {
+                enabled: false,
+                mode: "index",
+                intersect: false,
+                external: (context: {
+                    chart: ChartJS<"bar">;
+                    tooltip: TooltipModel<"bar">;
+                }): void => {
+                    // ton externalTooltipHandler ici, typé "bar"
+                    externalTooltipHandler
+                },
+                callbacks: {
+                    // Titre : l'année complète
+                    title: (context: TooltipItem<"bar">[]): string => {
+                        const chart = context[0].chart;
+                        const labels = chart.data.labels ?? [];
+                        const year = labels[context[0].dataIndex] as string;
+                        const index = context[0].dataIndex;
 
-    const options = {
-      maintainAspectRatio: false,
-      // devicePixelRatio: 1,
-      plugins: {
-        legend: {
-            display: false,
+                        const total = chart.data.datasets.reduce((sum, ds) => {
+                            return sum + Number(ds.data[index] || 0);
+                        }, 0);
+
+                        return `Rémunérations ${year}: ${formatAmount(total)} €`;
+                    },
+                    // Labels groupés : toutes les rémunérations de l'année
+                    label: (context: TooltipItem<"bar">): string => {
+                        const ds = context.dataset as ChartDataset<"pie"> & { metaLabels?: string[] };
+                        const rawLabel = ds.metaLabels?.[context.dataIndex] ?? context.label ?? "";
+                        const label = truncateLabel(rawLabel, 70);
+                        const value = Number(context.raw) || 0;
+
+                        if (!value) return "";
+
+                        return `${label}: ${value.toLocaleString("fr-FR")} €`;
+                    },
+                    labelTextColor: function() {
+                    return "#fff"; // n'importe quelle couleur
+                    },
+                },
+            },
         },
-        tooltip: {
-          enabled: false,
-          mode: "index",
-          intersect: false,
-          external: externalTooltipHandler,
-          callbacks: {
-            // Titre : l'année complète
-            title: function (context) {
-              const year = this.chart.data.labels[context[0].dataIndex];
-              const chart = context[0].chart;
-              const index = context[0].dataIndex;
-
-              const total = chart.data.datasets.reduce((sum, ds) => {
-                return sum + (ds.data[index] || 0);
-              }, 0);
-
-              return `Rémunérations ${year}: ${formatAmount(total)} €`;
+        scales: {
+            x: {
+                stacked: true,
+                ticks: {
+                    display: true, // masque les années
+                    callback(this: Scale, tickValue: string | number, index: number, ticks: Tick[]): string {
+                        const chart = this.chart;
+                        const labels = chart.data.labels ?? [];
+                        const label = labels[index] as string;
+                        return label.toString().slice(-2); // 2020 -> 20
+                    },
+                },
+                grid: {
+                    display: false, // enlève les lignes verticales
+                },
             },
-            // Labels groupés : toutes les rémunérations de l'année
-            label: function (context) {
-              const ds = context.dataset;
-              const rawLabel = ds.metaLabels[context.dataIndex];
-              const label = truncateLabel(rawLabel, 70);
-              const value = context.raw;
-
-              if (!value) return null;
-
-              return `${label}: ${value.toLocaleString("fr-FR")} €`;
+            y: {
+                stacked: true,
+                ticks: {
+                    callback(this: Scale, tickValue: string | number, index: number, ticks: Tick[]): string {
+                        const num = typeof tickValue === "number" ? tickValue : Number(tickValue) || 0;
+                        return formatK(num);
+                    }
+                    // callback: (value: number) => formatK(Number(value)),
+                },
+                grid: {
+                    display: true, // enlève les lignes horizontales
+                },
             },
-            // label: function (context) {
-            //   const ds = context.dataset;
-            //   const rawLabel = ds.metaLabels[context.dataIndex];
-            //   const label = truncateLabel(rawLabel, 70);
-            //   const value = context.raw;
-
-            //   if (!value) return null;
-
-            //   return `${label}: ${value.toLocaleString("fr-FR")} €`;
-            // },
-
-            // 🔥🔥🔥 C’est CE callback qui désactive le formateur interne
-            labelTextColor: function() {
-              return "#fff"; // n'importe quelle couleur
-            },
-
-            // Footer : total annuel
-            footer: function (context) {
-              return;
-              const chart = context[0].chart;
-              const index = context[0].dataIndex;
-
-              const total = chart.data.datasets.reduce((sum, ds) => {
-                return sum + (ds.data[index] || 0);
-              }, 0);
-
-              return `Total: ${formatAmount(total)} €`;
-            },
-          },
         },
-      },
-      scales: {
-        x: {
-          stacked: true,
-          ticks: {
-            display: true, // masque les années
-            // callback: (value, index, ticks) => {
-            //   const chart = ticks[index].chart;
-            //   const label = chart.data.labels[index];
-            //   return label.toString().slice(-2); // 2024 -> 24
-            // },
-            callback: function (value, index) {
-              const label = this.chart.data.labels[index];
-              return label.toString().slice(-2); // 2020 -> 20
-            },
-          },
-          grid: {
-            display: false, // enlève les lignes verticales
-          },
-        },
-        y: {
-          stacked: true,
-          ticks: {
-            callback: (value) => formatK(Number(value)),
-          },
-          grid: {
-            display: true, // enlève les lignes horizontales
-          },
-        },
-      },
     };
 
     return (

@@ -99,31 +99,6 @@ export default function ResponsablesPublicsView() {
     // const IDS = [2331,2863, 938, 741];
     const IDS = groupes.flatMap(g => g.ids);
 
-    // // IDs que tu choisis toi-même
-    // // const IDS = [465,466,467,468,469];
-    // const IDS = [
-    //     2331, // 1er ministre
-    //     2863, 938, 741, // ministres délégués
-    //     2819, 745, 3592, // Ministère de l'Intérieur
-    //     1627, 3225, // Ministère du Travail et des Solidarités
-    //     627, 1111, 2346, // Ministère de la Transition écologique, de la Biodiversité et des Négociations internationales sur le climat et la nature
-    //     1336, // Ministère de la Justice
-    //     2408, 938, 2587, 2362, // Ministère de l'Économie, des Finances et de la Souveraineté industrielle, énergétique et numérique
-    //     2877, // Ministère des Petites et moyennes entreprises, du Commerce, de l'Artisanat et du Tourisme et du Pouvoir d'achat
-    //     1824, // Ministère de l'Agriculture, de l'Agro-alimentaire et de la Souveraineté alimentaire
-    //     1812, 3225, // Ministère de l'Éducation nationale
-    //     645, 1991, 1702, 1060, // Ministère de l'Europe et des Affaires étrangères
-    //     3176, 1768, // Ministère de la Santé, des Familles, de l'Autonomie et des Personnes handicapées
-    //     2908, // Ministère de la Culture
-    //     2760, // Ministère des Outre-mer
-    //     1791, 1719, // Ministère de l'Aménagement du territoire et de la Décentralisation
-    //     520, // Ministère de l'Action et des Comptes publics
-    //     618, // Ministère de l'Enseignement supérieur, de la Recherche et de l'Espace
-    //     1667, // Ministère des Sports, de la Jeunesse et de la Vie associative
-    //     3433, // Ministère des Transports
-    //     2111, // Ministère de la Ville et du Logement
-    // ];
-
     useEffect(() => {
         setLoading(true);
         fetch(`/api/responsables-publics?ids=${IDS.join(",")}`)
@@ -185,13 +160,6 @@ export default function ResponsablesPublicsView() {
                     ))}
                 </div>
             )}
-
-{/*
-            <div className="p-0 grid grid-cols-1 md:grid-cols-2 gap-6">
-                {responsables.map((r) => (
-                    <ResponsablesPublicsCard key={r.id} responsable={r} />
-                ))}
-            </div> */}
         </div>
     );
 }
