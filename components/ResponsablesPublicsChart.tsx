@@ -136,7 +136,7 @@ export default function ResponsablesPublicsChart({ declarations }: { declaration
       datasets,
     };
 
-    function externalTooltipHandler(context: { chart: ChartJS; tooltip: TooltipModel<"pie"> }) {
+    function externalTooltipHandler(context: { chart: ChartJS<"bar">; tooltip: TooltipModel<"bar"> }) {
         const {chart, tooltip} = context;
 
         // Créer l'élément si nécessaire
@@ -219,7 +219,7 @@ export default function ResponsablesPublicsChart({ declarations }: { declaration
                     tooltip: TooltipModel<"bar">;
                 }): void => {
                     // ton externalTooltipHandler ici, typé "bar"
-                    externalTooltipHandler
+                    externalTooltipHandler(context);
                 },
                 callbacks: {
                     // Titre : l'année complète

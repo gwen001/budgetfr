@@ -155,6 +155,7 @@ export default function ResponsablesPublicsView() {
                                     </div>
                                 );
                             })}
+
                             </div>
                         </div>
                     ))}
