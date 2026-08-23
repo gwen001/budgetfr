@@ -1,60 +1,42 @@
-import { ResponsableRemunerationCompute } from "@/lib/supabase";
+import { SubventionVotee } from "@/lib/supabase";
 
 type Props = {
-    data: ResponsableRemunerationCompute[];
-    selectedFonction: string | null;
-    onResetFonction: () => void;
+    data: SubventionVotee[];
+    selectedCategory: string | null;
+    onResetCategory: () => void;
     searchTerm: string;
     onSearchTermChange: (value: string) => void;
-    groupByName: boolean;
-    onToggleGroupByName: () => void;
+    groupBySiret: boolean;
+    onToggleGroupBySiret: () => void;
 };
 
-function capitalizeWords(str: string | null | undefined) {
-    if( !str || !str.length ) {
-        return "";
-    }
-    return str
-      .split(" ")
-      .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-      .join(" ");
-}
-
-export default function ResponsablesPublicsRemunerationsTable({ data, selectedFonction, onResetFonction, searchTerm, onSearchTermChange, groupByName, onToggleGroupByName }: Props) {
-    const filtered = selectedFonction
+export default function ParisSubventionsAssociationsVoteesTable({ data, selectedCategory, onResetCategory, searchTerm, onSearchTermChange, groupBySiret, onToggleGroupBySiret }: Props) {
+    // Filtrer par catégorie
+    const filtered = selectedCategory
         ? data.filter(
             (s) =>
-            s.fonctionNom === selectedFonction
+            s.secteurs_d_activites_definies_par_l_association === selectedCategory
         )
         : data;
 
     let rows: any[] = [];
 
-    if (groupByName) {
-        // mode groupé par NOM
+    if (groupBySiret) {
+        // mode groupé par SIRET
         const grouped = filtered.reduce((acc, s) => {
-            const key = s.textCNP || "Non renseigné";
+            const key = s.numero_siret || "Non renseigné";
 
             if (!acc[key]) {
                 acc[key] = {
-                    responsableId: s.responsableId,
-                    civilite: s.civilite,
-                    nom: s.nom,
-                    prenom: s.prenom,
-                    photo: s.photo,
-                    employeur: s.employeur,
-                    description: s.description,
-                    montant: 0,
-                    annee: s.annee,
-                    fonctionId: s.fonctionId,
-                    fonctionNom: s.fonctionNom,
-                    textCNP: s.textCNP,
-                    textED: s.textED,
+                    secteurs_d_activites_definies_par_l_association: s.secteurs_d_activites_definies_par_l_association || "Non renseigné",
+                    nom_beneficiaire: s.nom_beneficiaire || "Non renseigné",
+                    numero_siret: s.numero_siret || "Non renseigné",
+                    montant_vote: 0,
                     lignes: [],
                 };
             }
 
-            acc[key].montant += s.montant || 0;
+            acc[key].montant_vote += s.montant_vote || 0;
             acc[key].lignes.push(s);
 
             return acc;
@@ -67,14 +49,14 @@ export default function ResponsablesPublicsRemunerationsTable({ data, selectedFo
     }
 
     const sorted = Object.values(rows).sort(
-        (a, b) => b.montant - a.montant
+        (a, b) => b.montant_vote - a.montant_vote
     );
 
     const filteredBySearch = sorted.filter((s) =>
-        s.textCNP.toLowerCase().includes( searchTerm.toLowerCase() ) || s.textED.toLowerCase().includes( searchTerm.toLowerCase() )
+        s.nom_beneficiaire.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const total = filteredBySearch.reduce((sum, s) => sum + s.montant, 0);
+    const total = filteredBySearch.reduce((sum, s) => sum + s.montant_vote, 0);
 
     const totalCount = data.length;
     const displayedCount = filteredBySearch.length;
@@ -86,7 +68,7 @@ export default function ResponsablesPublicsRemunerationsTable({ data, selectedFo
                     <div className="flex justify-between items-center">
                         {/* Titre */}
                         <h2 className="text-m lg:text-xl font-semibold mb-2 lg:mb-0">
-                            Détails des rémunérations
+                            Détails des subventions
                         </h2>
 
                         {/* Compteur */}
@@ -100,12 +82,12 @@ export default function ResponsablesPublicsRemunerationsTable({ data, selectedFo
                         <label className="flex items-center gap-1 cursor-pointer select-none ms-4">
                             <input
                                 type="checkbox"
-                                checked={groupByName}
-                                onChange={onToggleGroupByName}
+                                checked={groupBySiret}
+                                onChange={onToggleGroupBySiret}
                                 className="w-4 h-4"
                             />
                             <span className="text-sm">
-                                regrouper par nom
+                                regrouper par siret
                             </span>
                         </label>
                     </div>
@@ -133,13 +115,13 @@ export default function ResponsablesPublicsRemunerationsTable({ data, selectedFo
 
                     {/* Filtre secteur d'activité */}
                     <div className="border-0">
-                        {selectedFonction && (
+                        {selectedCategory && (
                             <span className="text-sm text-gray-600 flex items-center">
-                            fonction: <strong className="ml-1">{selectedFonction}</strong>
+                            sa: <strong className="ml-1">{selectedCategory}</strong>
 
                             {/* Bouton reset */}
                             <button
-                                onClick={onResetFonction}
+                                onClick={onResetCategory}
                                 className="ml-2 text-red-500 hover:cursor-pointer hover:text-red-700 font-bold text-lg"
                                 title="Supprimer le filtre"
                             >
@@ -171,62 +153,63 @@ export default function ResponsablesPublicsRemunerationsTable({ data, selectedFo
                         </tr>
                         <tr>
                             <th className="px-4 py-2 text-center hidden sm:block">#</th>
-                            <th className="px-4 py-2 text-left">Fonction</th>
-                            <th className="px-4 py-2 text-left">Responsable public</th>
-                            <th className="px-4 py-2 text-left">Employeur / description</th>
-                            <th className="px-4 py-2 text-right">Montant</th>
+                            <th className="px-4 py-2 text-left">Secteur d'activité</th>
+                            <th className="px-4 py-2 text-left hidden md:block">Siret</th>
+                            <th className="px-4 py-2 text-left">Bénéficiaire</th>
+                            <th className="px-4 py-2 text-right">Montant voté</th>
                         </tr>
                     </thead>
+
                     <tbody>
-                        {filteredBySearch.map((d, index) => (
+                        {filteredBySearch.map((s, index) => (
                             <tr key={index} className="border-b">
                                 <td className="px-4 py-2 text-center hidden sm:table-cell">{index + 1}</td>
-                                <td className="px-4 py-2">
-                                    {groupByName ? "-" : d.fonctionNom}
-                                    {/* {d.fonctionNom} */}
+                                <td className="px-4 py-2">{s.secteurs_d_activites_definies_par_l_association ?? "-"}</td>
+                                <td className="px-4 py-2 hidden md:block">
+                                    <a href={`https://annuaire-entreprises.data.gouv.fr/entreprise/aaa-${s.numero_siret?.slice(0,9)}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{s.numero_siret ?? "-"}</a>
                                 </td>
                                 <td className="px-4 py-2">
-                                    <a
-                                    href={`https://www.google.com/search?q=${d.nom}+${d.prenom}`}
-                                    target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline"
-                                    >
-                                        {capitalizeWords(d.civilite)}{""} {capitalizeWords(d.nom)}{""} {capitalizeWords(d.prenom)}{""}
-                                    </a>
-                                    {groupByName ? " ("+d.lignes.length+")" : ""}
-                                </td>
-                                <td className="px-4 py-2">
-                                    <span title={`${d.employeur} / ${d.description}`}>
-                                        {groupByName ? (
-                                            "-"
-                                        ) : (
-                                            d.employeur ? (
-                                                // d.employeur
-                                                d.employeur.length > 50
-                                                ? d.employeur.slice(0,50) + "..."
-                                                : d.employeur
-                                            ) : (
-                                                ""
-                                            )
-                                        )}
-                                        {/* {!groupByName && d.employeur && d.description ? <br /> : ""} */}
-                                        {!groupByName && d.employeur && d.description ? " / " : ""}
-                                        {/* <br /> */}
-                                        {groupByName ? (
-                                            ""
-                                        ) : (
-                                            d.description ? (
-                                                // d.description
-                                                d.description.length > 50
-                                                ? d.description.slice(0,50) + "..."
-                                                : d.description
-                                            ) : (
-                                                ""
-                                            )
-                                        )}
-                                    </span>
+                                    <div className="flex items-center gap-2">
+                                        <a
+                                        href={`https://www.google.com/search?q=association+${s.nom_beneficiaire}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-green-600 hover:text-green-800"
+                                        >
+                                            {/* <img src="/img/google.png" height="16" width="16" /> */}
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                className="h-5 w-5"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                                strokeWidth={2}
+                                            >
+                                                <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                d="M13 7h5m0 0v5m0-5L10 15m-4 4h8a2 2 0 002-2v-8"
+                                                />
+                                            </svg>
+                                        </a>
+                                        {/* <a
+                                        href={`https://www.helloasso.com/e/recherche?query=${s.nom_beneficiaire}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-green-600 hover:text-green-800"
+                                        >
+                                            <img src="/img/helloasso.png" height="16" width="16" />
+                                        </a> */}
+                                        <span title={`${s.nom_beneficiaire}`}>
+                                            {s.nom_beneficiaire.length > 50
+                                            ? s.nom_beneficiaire.slice(0, 50) + "..."
+                                            : s.nom_beneficiaire}
+                                        </span>
+                                        {groupBySiret ? " ("+s.lignes.length+")" : ""}
+                                    </div>
                                 </td>
                                 <td className="px-4 py-2 text-right">
-                                    {d.montant?.toLocaleString("fr-FR", {
+                                    {s.montant_vote?.toLocaleString("fr-FR", {
                                         style: "decimal",
                                         currency: "EUR",
                                         minimumFractionDigits: 0,

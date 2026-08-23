@@ -19,10 +19,10 @@ export default function DatasetSelector({ dataset }: Props) {
             onChange={(e) => handleChange(e.target.value)}
             className="border px-3 py-2 rounded bg-white"
         >
-            <option value="subventions-votees">Subventions aux associations votées</option>
-            <option value="subventions-versees">Subventions versées - annexe compte administratif</option>
-            <option value="responsables-publics">Rémunérations des responsables publics</option>
-            {/* <option value="responsables-publics-remunerations">Rémunérations des responsables publics par fonction</option> */}
+            <option value="paris-subventions-associations-votees">PARIS: Subventions aux associations votées</option>
+            <option value="paris-subventions-versees">PARIS: Subventions versées - annexe compte administratif</option>
+            <option value="france-remunerations-gouvernement-2026">FRANCE: Rémunérations des membres du gouvernement 2026</option>
+            {/* <option value="france-remunerations-responsables-publics">FRANCE: Rémunérations des responsables publics par fonction</option> */}
         </select>
     );
 }

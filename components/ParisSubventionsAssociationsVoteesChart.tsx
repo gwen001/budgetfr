@@ -9,19 +9,18 @@ import {
     Legend,
     TooltipItem
 } from "chart.js";
-import { SubventionVersee } from "@/lib/supabase";
+import { SubventionVotee } from "@/lib/supabase";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 type Props = {
-    data: SubventionVersee[];
+    data: SubventionVotee[];
     selectedCategory: string | null;
     onCategoryClick: (category: string | null) => void;
     countByCategory: Record<string, number>;
 };
 
-
-export default function SubventionsVerseesChart({ data, selectedCategory, onCategoryClick, countByCategory }: Props) {
+export default function ParisSubventionsAssociationsVoteesChart({ data, selectedCategory, onCategoryClick, countByCategory }: Props) {
 
     if (data.length === 0) {
         return (
@@ -33,9 +32,8 @@ export default function SubventionsVerseesChart({ data, selectedCategory, onCate
 
     // Agrégation des montants par catégorie
     const byCategory = data.reduce<Record<string, number>>((acc, s) => {
-        const key = s.nature_juridique_du_beneficiaire || "Non renseigné";
-        // const key = s.secteurs_d_activites_definies_par_l_association || "Non renseigné";
-        acc[key] = (acc[key] || 0) + (s.montant_verse || 0);
+        const key = s.secteurs_d_activites_definies_par_l_association || "Non renseigné";
+        acc[key] = (acc[key] || 0) + (s.montant_vote || 0);
         return acc;
     }, {});
 
@@ -51,10 +49,9 @@ export default function SubventionsVerseesChart({ data, selectedCategory, onCate
         data
             .filter(
             (s) =>
-                // (s.secteurs_d_activites_definies_par_l_association || "Non renseigné") === label
-                (s.nature_juridique_du_beneficiaire || "Non renseigné") === label
+                (s.secteurs_d_activites_definies_par_l_association || "Non renseigné") === label
             )
-            .reduce((sum, s) => sum + (s.montant_verse || 0), 0)
+            .reduce((sum, s) => sum + (s.montant_vote || 0), 0)
         );
 
     // 👉 total global, toutes catégories confondues
@@ -64,10 +61,9 @@ export default function SubventionsVerseesChart({ data, selectedCategory, onCate
         data
             .filter(
             (s) =>
-                // (s.secteurs_d_activites_definies_par_l_association || "Non renseigné") === label
-                (s.nature_juridique_du_beneficiaire || "Non renseigné") === label
+                (s.secteurs_d_activites_definies_par_l_association || "Non renseigné") === label
             )
-            .reduce((sum, s) => sum + (s.montant_verse || 0), 0)
+            .reduce((sum, s) => sum + (s.montant_vote || 0), 0)
         );
 
     const chartData = {
@@ -79,13 +75,29 @@ export default function SubventionsVerseesChart({ data, selectedCategory, onCate
                 borderWidth: 2,
                 backgroundColor: [
                     "#DD0000",
+                    "#FF3300",
+                    "#FF6600",
+                    "#FF9900",
                     "#FFCC00",
                     "#EEEE00",
+                    "#CCFF00",
                     "#99FF00",
+                    "#00FF99",
+                    "#00FFCC",
                     "#00FFFF",
+                    "#00CCFF",
+                    "#0099FF",
                     "#0066FF",
+                    "#0000FF",
+                    "#3300CC",
+                    "#6600CC",
+                    "#9900CC",
                     "#CC00CC",
+                    "#FF00CC",
+                    "#FF33CC",
+                    "#FF66CC",
                     "#FF99CC",
+                    "#FFCCFF",
                 ],
             },
         ],
@@ -164,7 +176,7 @@ export default function SubventionsVerseesChart({ data, selectedCategory, onCate
     return (
         <div className="bg-white rounded-xl shadow p-2 sm:p-8">
             <h2 className="text-center lg:text-left text-xl font-semibold mb-4">
-                Répartition des montants par nature juridique
+                Répartition des montants par secteur d'activité
             </h2>
 
             <div className="flex flex-col lg:flex-row gap-6 border-0 items-center lg:items-start lg:justify-center">

@@ -16,23 +16,23 @@ export default function Page() {
 
             <ul className="list-disc pl-6 space-y-2">
                 <li>
-                    <Link href="/subventions-votees" className="text-blue-600 underline">
-                        Répartition des subventions votées aux associations
+                    <Link href="/paris-subventions-associations-votees" className="text-blue-600 underline">
+                        PARIS: Répartition des subventions aux associations votées
                     </Link>
                 </li>
                 <li>
-                    <Link href="/subventions-versees" className="text-blue-600 underline">
-                        Répartition des subventions versées, comptes annexes
+                    <Link href="/paris-subventions-versees" className="text-blue-600 underline">
+                        PARIS: Répartition des subventions versées - annexe compte administratif
                     </Link>
                 </li>
                 <li>
-                    <Link href="/responsables-publics" className="text-blue-600 underline">
-                        Rémunérations des membres du gouvernement en place depuis février 2026
+                    <Link href="/france-remunerations-gouvernement-2026" className="text-blue-600 underline">
+                        FRANCE: Rémunérations des membres du gouvernement 2026
                     </Link>
                 </li>
                 {/* <li>
-                    <Link href="/responsables-publics-remunerations" className="text-blue-600 underline">
-                        Répartition des rémunérations des responsables publiques
+                    <Link href="/france-remunerations-responsables-publics" className="text-blue-600 underline">
+                        FRANCE: Rémunérations des responsables publics par fonction
                     </Link>
                 </li> */}
             </ul>

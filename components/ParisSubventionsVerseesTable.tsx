@@ -1,42 +1,43 @@
-import { SubventionVotee } from "@/lib/supabase";
+import { SubventionVersee } from "@/lib/supabase";
 
 type Props = {
-    data: SubventionVotee[];
-    selectedCategory: string | null;
-    onResetCategory: () => void;
-    searchTerm: string;
-    onSearchTermChange: (value: string) => void;
-    groupBySiret: boolean;
-    onToggleGroupBySiret: () => void;
+  data: SubventionVersee[];
+  selectedCategory: string | null;
+  onResetCategory: () => void;
+  searchTerm: string;
+  onSearchTermChange: (value: string) => void;
+  groupBySiret: boolean;
+  onToggleGroupBySiret: () => void;
 };
 
-export default function SubventionsVoteesTable({ data, selectedCategory, onResetCategory, searchTerm, onSearchTermChange, groupBySiret, onToggleGroupBySiret }: Props) {
-    // Filtrer par catégorie
-    const filtered = selectedCategory
-        ? data.filter(
-            (s) =>
-            s.secteurs_d_activites_definies_par_l_association === selectedCategory
-        )
-        : data;
+export default function ParisSubventionsVerseesTable({ data, selectedCategory, onResetCategory, searchTerm, onSearchTermChange, groupBySiret, onToggleGroupBySiret }: Props) {
+  // Filtrer par catégorie
+  const filtered = selectedCategory
+    ? data.filter(
+        (s) =>
+          s.nature_juridique_du_beneficiaire === selectedCategory
+      )
+    : data;
 
     let rows: any[] = [];
 
     if (groupBySiret) {
-        // mode groupé par SIRET
+        // mode groupé par nature juridique
         const grouped = filtered.reduce((acc, s) => {
-            const key = s.numero_siret || "Non renseigné";
+            const key = s.nom_organisme_beneficiaire || "Non renseigné";
 
             if (!acc[key]) {
                 acc[key] = {
-                    secteurs_d_activites_definies_par_l_association: s.secteurs_d_activites_definies_par_l_association || "Non renseigné",
-                    nom_beneficiaire: s.nom_beneficiaire || "Non renseigné",
-                    numero_siret: s.numero_siret || "Non renseigné",
-                    montant_vote: 0,
+                    nature_juridique_du_beneficiaire: s.nature_juridique_du_beneficiaire || "Non renseigné",
+                    nom_organisme_beneficiaire: s.nom_organisme_beneficiaire || "Non renseigné",
+                    // montant_de_la_subvention: s.montant_de_la_subvention,
+                    // prestations_en_nature: s.prestations_en_nature,
+                    montant_verse: 0,
                     lignes: [],
                 };
             }
 
-            acc[key].montant_vote += s.montant_vote || 0;
+            acc[key].montant_verse += s.montant_verse || 0;
             acc[key].lignes.push(s);
 
             return acc;
@@ -49,14 +50,14 @@ export default function SubventionsVoteesTable({ data, selectedCategory, onReset
     }
 
     const sorted = Object.values(rows).sort(
-        (a, b) => b.montant_vote - a.montant_vote
+        (a, b) => b.montant_verse - a.montant_verse
     );
 
     const filteredBySearch = sorted.filter((s) =>
-        s.nom_beneficiaire.toLowerCase().includes(searchTerm.toLowerCase())
+        s.nom_organisme_beneficiaire.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const total = filteredBySearch.reduce((sum, s) => sum + s.montant_vote, 0);
+    const total = filteredBySearch.reduce((sum, s) => sum + s.montant_verse, 0);
 
     const totalCount = data.length;
     const displayedCount = filteredBySearch.length;
@@ -79,7 +80,7 @@ export default function SubventionsVoteesTable({ data, selectedCategory, onReset
                         </div>
 
                         {/* Checkbox regroupement */}
-                        <label className="flex items-center gap-1 cursor-pointer select-none ms-4">
+                        {/* <label className="flex items-center gap-1 cursor-pointer select-none ms-4">
                             <input
                                 type="checkbox"
                                 checked={groupBySiret}
@@ -87,9 +88,9 @@ export default function SubventionsVoteesTable({ data, selectedCategory, onReset
                                 className="w-4 h-4"
                             />
                             <span className="text-sm">
-                                regrouper par siret
+                                regrouper par bénéficiaire
                             </span>
-                        </label>
+                        </label> */}
                     </div>
 
                     {/* Filtre textuel */}
@@ -113,11 +114,11 @@ export default function SubventionsVoteesTable({ data, selectedCategory, onReset
                         )}
                     </div>
 
-                    {/* Filtre secteur d'activité */}
+                    {/* Filtre nature juridique */}
                     <div className="border-0">
                         {selectedCategory && (
                             <span className="text-sm text-gray-600 flex items-center">
-                            sa: <strong className="ml-1">{selectedCategory}</strong>
+                            nj: <strong className="ml-1">{selectedCategory}</strong>
 
                             {/* Bouton reset */}
                             <button
@@ -139,7 +140,6 @@ export default function SubventionsVoteesTable({ data, selectedCategory, onReset
                         <tr className="bg-white font-semibold">
                             <td className="px-4 py-2 hidden sm:block"></td>
                             <td className="px-4 py-2"></td>
-                            <td className="px-4 py-2 hidden md:block"></td>
                             <td className="px-4 py-2 text-right text-red-500">TOTAL:</td>
                             <td className="px-4 py-2 text-right text-red-500">
                                 {total.toLocaleString("fr-FR", {
@@ -153,10 +153,9 @@ export default function SubventionsVoteesTable({ data, selectedCategory, onReset
                         </tr>
                         <tr>
                             <th className="px-4 py-2 text-center hidden sm:block">#</th>
-                            <th className="px-4 py-2 text-left">Secteur d'activité</th>
-                            <th className="px-4 py-2 text-left hidden md:block">Siret</th>
+                            <th className="px-4 py-2 text-left">Nature juridique</th>
                             <th className="px-4 py-2 text-left">Bénéficiaire</th>
-                            <th className="px-4 py-2 text-right">Montant voté</th>
+                            <th className="px-4 py-2 text-right">Montant versé</th>
                         </tr>
                     </thead>
 
@@ -164,19 +163,15 @@ export default function SubventionsVoteesTable({ data, selectedCategory, onReset
                         {filteredBySearch.map((s, index) => (
                             <tr key={index} className="border-b">
                                 <td className="px-4 py-2 text-center hidden sm:table-cell">{index + 1}</td>
-                                <td className="px-4 py-2">{s.secteurs_d_activites_definies_par_l_association ?? "-"}</td>
-                                <td className="px-4 py-2 hidden md:block">
-                                    <a href={`https://annuaire-entreprises.data.gouv.fr/entreprise/aaa-${s.numero_siret?.slice(0,9)}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{s.numero_siret ?? "-"}</a>
-                                </td>
+                                <td className="px-4 py-2">{s.nature_juridique_du_beneficiaire ?? "-"}</td>
                                 <td className="px-4 py-2">
                                     <div className="flex items-center gap-2">
                                         <a
-                                        href={`https://www.google.com/search?q=association+${s.nom_beneficiaire}`}
+                                        href={`https://www.google.com/search?q=${s.nature_juridique_du_beneficiaire}+${s.nom_organisme_beneficiaire}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="text-green-600 hover:text-green-800"
                                         >
-                                            {/* <img src="/img/google.png" height="16" width="16" /> */}
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 className="h-5 w-5"
@@ -192,24 +187,16 @@ export default function SubventionsVoteesTable({ data, selectedCategory, onReset
                                                 />
                                             </svg>
                                         </a>
-                                        {/* <a
-                                        href={`https://www.helloasso.com/e/recherche?query=${s.nom_beneficiaire}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-green-600 hover:text-green-800"
-                                        >
-                                            <img src="/img/helloasso.png" height="16" width="16" />
-                                        </a> */}
-                                        <span title={`${s.nom_beneficiaire}`}>
-                                            {s.nom_beneficiaire.length > 50
-                                            ? s.nom_beneficiaire.slice(0, 50) + "..."
-                                            : s.nom_beneficiaire}
+                                        <span title={`${s.nom_organisme_beneficiaire}`}>
+                                            {s.nom_organisme_beneficiaire.length > 50
+                                            ? s.nom_organisme_beneficiaire.slice(0, 50) + "..."
+                                            : s.nom_organisme_beneficiaire}
                                         </span>
                                         {groupBySiret ? " ("+s.lignes.length+")" : ""}
                                     </div>
                                 </td>
                                 <td className="px-4 py-2 text-right">
-                                    {s.montant_vote?.toLocaleString("fr-FR", {
+                                    {s.montant_verse?.toLocaleString("fr-FR", {
                                         style: "decimal",
                                         currency: "EUR",
                                         minimumFractionDigits: 0,
@@ -220,7 +207,6 @@ export default function SubventionsVoteesTable({ data, selectedCategory, onReset
                         <tr className="bg-gray-200 font-semibold">
                             <td className="px-4 py-2 hidden sm:block"></td>
                             <td className="px-4 py-2"></td>
-                            <td className="px-4 py-2 hidden md:block"></td>
                             <td className="px-4 py-2 text-right text-red-500">TOTAL:</td>
                             <td className="px-4 py-2 text-right text-red-500">
                                 {total.toLocaleString("fr-FR", {

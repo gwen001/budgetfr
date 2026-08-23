@@ -7,8 +7,8 @@ import DataSelector from "./DataSelector";
 import YearSelector from "./YearSelector";
 import InfoButton from "@/components/InfoButton";
 import InfoPopup from "@/components/InfoHATVP2";
-import ResponsablesPublicsRemunerationsChart from "./ResponsablesPublicsRemunerationsChart";
-import ResponsablesPublicsRemunerationsTable from "./ResponsablesPublicsRemunerationsTable";
+import FranceRemunerationsResponsablesPublicsChart from "./FranceRemunerationsResponsablesPublicsChart";
+import FranceRemunerationsResponsablesPublicsTable from "./FranceRemunerationsResponsablesPublicsTable";
 
 function capitalizeWords(str: string | null | undefined) {
     if( !str || !str.length ) {
@@ -20,7 +20,7 @@ function capitalizeWords(str: string | null | undefined) {
       .join(" ");
 }
 
-export default function ResponsablesPublicsRemunerationsView() {
+export default function FranceRemunerationsResponsablesPublicsView() {
     const [loading, setLoading] = useState(false);
     const [selectedYear, setSelectedYear] = useState(2025);
     const [showInfo, setShowInfo] = useState(false);
@@ -35,7 +35,7 @@ export default function ResponsablesPublicsRemunerationsView() {
             setLoading(true);
             setSelectedFonction(null);
 
-            const res = await fetch(`/api/responsables-publics-remunerations?year=${selectedYear}`);
+            const res = await fetch(`/api/france-remunerations-responsables-publics?year=${selectedYear}`);
             const json = await res.json();
 
             const rows = json || [];
@@ -88,7 +88,7 @@ export default function ResponsablesPublicsRemunerationsView() {
              <header className="mb-4">
                  <div className="lg:flex justify-between items-center mb-6">
                      <div className="lg:flex items-center gap-4">
-                        <DataSelector dataset="responsables-publics-remunerations" />
+                        <DataSelector dataset="france-remunerations-responsables-publics" />
                         <InfoButton onClick={() => setShowInfo(true)} />
                      </div>
                     <YearSelector years={[2021, 2022, 2023, 2024, 2025]} selectedYear={selectedYear} onChange={setSelectedYear} />
@@ -100,7 +100,7 @@ export default function ResponsablesPublicsRemunerationsView() {
             {loading ? (
                 <Loader />
             ) : (
-                <ResponsablesPublicsRemunerationsChart
+                <FranceRemunerationsResponsablesPublicsChart
                     data={tableData}
                     onSliceClick={handleSliceClick}
                     selectedFonction={selectedFonction}
@@ -109,7 +109,7 @@ export default function ResponsablesPublicsRemunerationsView() {
             {loading ? (
                 <Loader />
             ) : (
-                <ResponsablesPublicsRemunerationsTable
+                <FranceRemunerationsResponsablesPublicsTable
                     data={tableData}
                     selectedFonction={selectedFonction}
                     onResetFonction={() => { setSelectedFonction(null); setSearchTerm(""); }}

@@ -1,27 +1,30 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { SubventionVotee } from "@/lib/supabase";
+import { SubventionVersee } from "@/lib/supabase";
 import Loader from "@/components/Loader";
 import YearSelector from "@/components/YearSelector";
 import DataSelector from "@/components/DataSelector";
 import InfoButton from "@/components/InfoButton";
 import InfoPopup from "@/components/InfoParisData";
-import SubventionsVoteesChart from "@/components/SubventionsVoteesChart";
-import SubventionsVoteesTable from "@/components/SubventionsVoteesTable";
+import ParisSubventionsVerseesChart from "@/components/ParisSubventionsVerseesChart";
+import ParisSubventionsVerseesTable from "@/components/ParisSubventionsVerseesTable";
 
-export default function SubventionsVoteesView() {
+export const metadata = {
+    title: "gniiiiiiiii",
+};
+
+export default function ParisSubventionsVerseesView() {
     const [loading, setLoading] = useState(false);
-    const [selectedYear, setSelectedYear] = useState(2025);
-    const [showInfo, setShowInfo] = useState(false);
-
-    const [data, setData] = useState<SubventionVotee[]>([]);
+    const [selectedYear, setSelectedYear] = useState(2024);
+    const [data, setData] = useState<SubventionVersee[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [groupBySiret, setGroupBySiret] = useState(false);
+    const [showInfo, setShowInfo] = useState(false);
 
     const countByCategory = data.reduce((acc, s) => {
-        const cat = s.secteurs_d_activites_definies_par_l_association || "Non renseigné";
+        const cat = s.nature_juridique_du_beneficiaire || "Non renseigné";
         acc[cat] = (acc[cat] || 0) + 1;
         return acc;
     }, {} as Record<string, number>);
@@ -29,7 +32,7 @@ export default function SubventionsVoteesView() {
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-            fetch(`/api/subventions-votees?year=${selectedYear}`)
+            fetch(`/api/paris-subventions-versees?year=${selectedYear}`)
                 .then((res) => res.json())
                 .then((json) => setData(json))
                 .finally(() => setLoading(false));
@@ -59,10 +62,10 @@ export default function SubventionsVoteesView() {
              <header className="mb-4">
                  <div className="lg:flex justify-between items-center mb-6">
                      <div className="lg:flex items-center gap-4">
-                         <DataSelector dataset="subventions-votees" />
+                         <DataSelector dataset="paris-subventions-versees" />
                          <InfoButton onClick={() => setShowInfo(true)} />
                      </div>
-                    <YearSelector years={[2022, 2023, 2024, 2025]} selectedYear={selectedYear} onChange={setSelectedYear} />
+                    <YearSelector years={[2022, 2023, 2024]} selectedYear={selectedYear} onChange={setSelectedYear} />
                  </div>
              </header>
 
@@ -71,7 +74,7 @@ export default function SubventionsVoteesView() {
             {loading ? (
                 <Loader />
             ) : (
-                <SubventionsVoteesChart
+                <ParisSubventionsVerseesChart
                     data={data}
                     selectedCategory={selectedCategory}
                     onCategoryClick={(cat) => { setSelectedCategory(cat); setSearchTerm(""); }}
@@ -82,7 +85,7 @@ export default function SubventionsVoteesView() {
             {loading ? (
                 <Loader />
             ) : (
-                <SubventionsVoteesTable
+                <ParisSubventionsVerseesTable
                     data={data}
                     selectedCategory={selectedCategory}
                     onResetCategory={() => { setSelectedCategory(null); setSearchTerm(""); }}

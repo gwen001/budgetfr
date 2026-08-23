@@ -1,43 +1,60 @@
-import { SubventionVersee } from "@/lib/supabase";
+import { ResponsableRemunerationCompute } from "@/lib/supabase";
 
 type Props = {
-  data: SubventionVersee[];
-  selectedCategory: string | null;
-  onResetCategory: () => void;
-  searchTerm: string;
-  onSearchTermChange: (value: string) => void;
-  groupBySiret: boolean;
-  onToggleGroupBySiret: () => void;
+    data: ResponsableRemunerationCompute[];
+    selectedFonction: string | null;
+    onResetFonction: () => void;
+    searchTerm: string;
+    onSearchTermChange: (value: string) => void;
+    groupByName: boolean;
+    onToggleGroupByName: () => void;
 };
 
-export default function SubventionsVerseesTable({ data, selectedCategory, onResetCategory, searchTerm, onSearchTermChange, groupBySiret, onToggleGroupBySiret }: Props) {
-  // Filtrer par catégorie
-  const filtered = selectedCategory
-    ? data.filter(
-        (s) =>
-          s.nature_juridique_du_beneficiaire === selectedCategory
-      )
-    : data;
+function capitalizeWords(str: string | null | undefined) {
+    if( !str || !str.length ) {
+        return "";
+    }
+    return str
+      .split(" ")
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+      .join(" ");
+}
+
+export default function FranceRemunerationsResponsablesPublicsTable({ data, selectedFonction, onResetFonction, searchTerm, onSearchTermChange, groupByName, onToggleGroupByName }: Props) {
+    const filtered = selectedFonction
+        ? data.filter(
+            (s) =>
+            s.fonctionNom === selectedFonction
+        )
+        : data;
 
     let rows: any[] = [];
 
-    if (groupBySiret) {
-        // mode groupé par nature juridique
+    if (groupByName) {
+        // mode groupé par NOM
         const grouped = filtered.reduce((acc, s) => {
-            const key = s.nom_organisme_beneficiaire || "Non renseigné";
+            const key = s.textCNP || "Non renseigné";
 
             if (!acc[key]) {
                 acc[key] = {
-                    nature_juridique_du_beneficiaire: s.nature_juridique_du_beneficiaire || "Non renseigné",
-                    nom_organisme_beneficiaire: s.nom_organisme_beneficiaire || "Non renseigné",
-                    // montant_de_la_subvention: s.montant_de_la_subvention,
-                    // prestations_en_nature: s.prestations_en_nature,
-                    montant_verse: 0,
+                    responsableId: s.responsableId,
+                    civilite: s.civilite,
+                    nom: s.nom,
+                    prenom: s.prenom,
+                    photo: s.photo,
+                    employeur: s.employeur,
+                    description: s.description,
+                    montant: 0,
+                    annee: s.annee,
+                    fonctionId: s.fonctionId,
+                    fonctionNom: s.fonctionNom,
+                    textCNP: s.textCNP,
+                    textED: s.textED,
                     lignes: [],
                 };
             }
 
-            acc[key].montant_verse += s.montant_verse || 0;
+            acc[key].montant += s.montant || 0;
             acc[key].lignes.push(s);
 
             return acc;
@@ -50,14 +67,14 @@ export default function SubventionsVerseesTable({ data, selectedCategory, onRese
     }
 
     const sorted = Object.values(rows).sort(
-        (a, b) => b.montant_verse - a.montant_verse
+        (a, b) => b.montant - a.montant
     );
 
     const filteredBySearch = sorted.filter((s) =>
-        s.nom_organisme_beneficiaire.toLowerCase().includes(searchTerm.toLowerCase())
+        s.textCNP.toLowerCase().includes( searchTerm.toLowerCase() ) || s.textED.toLowerCase().includes( searchTerm.toLowerCase() )
     );
 
-    const total = filteredBySearch.reduce((sum, s) => sum + s.montant_verse, 0);
+    const total = filteredBySearch.reduce((sum, s) => sum + s.montant, 0);
 
     const totalCount = data.length;
     const displayedCount = filteredBySearch.length;
@@ -69,7 +86,7 @@ export default function SubventionsVerseesTable({ data, selectedCategory, onRese
                     <div className="flex justify-between items-center">
                         {/* Titre */}
                         <h2 className="text-m lg:text-xl font-semibold mb-2 lg:mb-0">
-                            Détails des subventions
+                            Détails des rémunérations
                         </h2>
 
                         {/* Compteur */}
@@ -80,17 +97,17 @@ export default function SubventionsVerseesTable({ data, selectedCategory, onRese
                         </div>
 
                         {/* Checkbox regroupement */}
-                        {/* <label className="flex items-center gap-1 cursor-pointer select-none ms-4">
+                        <label className="flex items-center gap-1 cursor-pointer select-none ms-4">
                             <input
                                 type="checkbox"
-                                checked={groupBySiret}
-                                onChange={onToggleGroupBySiret}
+                                checked={groupByName}
+                                onChange={onToggleGroupByName}
                                 className="w-4 h-4"
                             />
                             <span className="text-sm">
-                                regrouper par bénéficiaire
+                                regrouper par nom
                             </span>
-                        </label> */}
+                        </label>
                     </div>
 
                     {/* Filtre textuel */}
@@ -114,15 +131,15 @@ export default function SubventionsVerseesTable({ data, selectedCategory, onRese
                         )}
                     </div>
 
-                    {/* Filtre nature juridique */}
+                    {/* Filtre secteur d'activité */}
                     <div className="border-0">
-                        {selectedCategory && (
+                        {selectedFonction && (
                             <span className="text-sm text-gray-600 flex items-center">
-                            nj: <strong className="ml-1">{selectedCategory}</strong>
+                            fonction: <strong className="ml-1">{selectedFonction}</strong>
 
                             {/* Bouton reset */}
                             <button
-                                onClick={onResetCategory}
+                                onClick={onResetFonction}
                                 className="ml-2 text-red-500 hover:cursor-pointer hover:text-red-700 font-bold text-lg"
                                 title="Supprimer le filtre"
                             >
@@ -140,6 +157,7 @@ export default function SubventionsVerseesTable({ data, selectedCategory, onRese
                         <tr className="bg-white font-semibold">
                             <td className="px-4 py-2 hidden sm:block"></td>
                             <td className="px-4 py-2"></td>
+                            <td className="px-4 py-2 hidden md:block"></td>
                             <td className="px-4 py-2 text-right text-red-500">TOTAL:</td>
                             <td className="px-4 py-2 text-right text-red-500">
                                 {total.toLocaleString("fr-FR", {
@@ -153,50 +171,62 @@ export default function SubventionsVerseesTable({ data, selectedCategory, onRese
                         </tr>
                         <tr>
                             <th className="px-4 py-2 text-center hidden sm:block">#</th>
-                            <th className="px-4 py-2 text-left">Nature juridique</th>
-                            <th className="px-4 py-2 text-left">Bénéficiaire</th>
-                            <th className="px-4 py-2 text-right">Montant versé</th>
+                            <th className="px-4 py-2 text-left">Fonction</th>
+                            <th className="px-4 py-2 text-left">Responsable public</th>
+                            <th className="px-4 py-2 text-left">Employeur / description</th>
+                            <th className="px-4 py-2 text-right">Montant</th>
                         </tr>
                     </thead>
-
                     <tbody>
-                        {filteredBySearch.map((s, index) => (
+                        {filteredBySearch.map((d, index) => (
                             <tr key={index} className="border-b">
                                 <td className="px-4 py-2 text-center hidden sm:table-cell">{index + 1}</td>
-                                <td className="px-4 py-2">{s.nature_juridique_du_beneficiaire ?? "-"}</td>
                                 <td className="px-4 py-2">
-                                    <div className="flex items-center gap-2">
-                                        <a
-                                        href={`https://www.google.com/search?q=${s.nature_juridique_du_beneficiaire}+${s.nom_organisme_beneficiaire}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-green-600 hover:text-green-800"
-                                        >
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                className="h-5 w-5"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
-                                                strokeWidth={2}
-                                            >
-                                                <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                d="M13 7h5m0 0v5m0-5L10 15m-4 4h8a2 2 0 002-2v-8"
-                                                />
-                                            </svg>
-                                        </a>
-                                        <span title={`${s.nom_organisme_beneficiaire}`}>
-                                            {s.nom_organisme_beneficiaire.length > 50
-                                            ? s.nom_organisme_beneficiaire.slice(0, 50) + "..."
-                                            : s.nom_organisme_beneficiaire}
-                                        </span>
-                                        {groupBySiret ? " ("+s.lignes.length+")" : ""}
-                                    </div>
+                                    {groupByName ? "-" : d.fonctionNom}
+                                    {/* {d.fonctionNom} */}
+                                </td>
+                                <td className="px-4 py-2">
+                                    <a
+                                    href={`https://www.google.com/search?q=${d.nom}+${d.prenom}`}
+                                    target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline"
+                                    >
+                                        {capitalizeWords(d.civilite)}{""} {capitalizeWords(d.nom)}{""} {capitalizeWords(d.prenom)}{""}
+                                    </a>
+                                    {groupByName ? " ("+d.lignes.length+")" : ""}
+                                </td>
+                                <td className="px-4 py-2">
+                                    <span title={`${d.employeur} / ${d.description}`}>
+                                        {groupByName ? (
+                                            "-"
+                                        ) : (
+                                            d.employeur ? (
+                                                // d.employeur
+                                                d.employeur.length > 50
+                                                ? d.employeur.slice(0,50) + "..."
+                                                : d.employeur
+                                            ) : (
+                                                ""
+                                            )
+                                        )}
+                                        {/* {!groupByName && d.employeur && d.description ? <br /> : ""} */}
+                                        {!groupByName && d.employeur && d.description ? " / " : ""}
+                                        {/* <br /> */}
+                                        {groupByName ? (
+                                            ""
+                                        ) : (
+                                            d.description ? (
+                                                // d.description
+                                                d.description.length > 50
+                                                ? d.description.slice(0,50) + "..."
+                                                : d.description
+                                            ) : (
+                                                ""
+                                            )
+                                        )}
+                                    </span>
                                 </td>
                                 <td className="px-4 py-2 text-right">
-                                    {s.montant_verse?.toLocaleString("fr-FR", {
+                                    {d.montant?.toLocaleString("fr-FR", {
                                         style: "decimal",
                                         currency: "EUR",
                                         minimumFractionDigits: 0,
@@ -207,6 +237,7 @@ export default function SubventionsVerseesTable({ data, selectedCategory, onRese
                         <tr className="bg-gray-200 font-semibold">
                             <td className="px-4 py-2 hidden sm:block"></td>
                             <td className="px-4 py-2"></td>
+                            <td className="px-4 py-2 hidden md:block"></td>
                             <td className="px-4 py-2 text-right text-red-500">TOTAL:</td>
                             <td className="px-4 py-2 text-right text-red-500">
                                 {total.toLocaleString("fr-FR", {

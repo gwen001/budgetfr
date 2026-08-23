@@ -86,7 +86,7 @@ export function formatAmount(value: number | string): string {
 }
 
 
-export default function ResponsablesPublicsChart({ declarations }: { declarations: ResponsableDeclaration[]}) {
+export default function FranceRemunerationsGouvernement2026Chart({ declarations }: { declarations: ResponsableDeclaration[]}) {
     const lastYears = [2020, 2021, 2022, 2023, 2024, 2025];
 
       // Palette de couleurs pour chaque rémunération

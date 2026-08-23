@@ -6,9 +6,9 @@ import Loader from "@/components/Loader";
 import DataSelector from "@/components/DataSelector";
 import InfoButton from "@/components/InfoButton";
 import InfoPopup from "@/components/InfoHATVP1";
-import ResponsablesPublicsCard from "@/components/ResponsablesPublicsCard";
+import FranceRemunerationsGouvernement2026Card from "@/components/FranceRemunerationsGouvernement2026Card";
 
-export default function ResponsablesPublicsView() {
+export default function FranceRemunerationsGouvernement2026View() {
     const [loading, setLoading] = useState(false);
     const [showInfo, setShowInfo] = useState(false);
     const [responsables, setResponsables] = useState<ResponsablePublic[]>([]);
@@ -101,7 +101,7 @@ export default function ResponsablesPublicsView() {
 
     useEffect(() => {
         setLoading(true);
-        fetch(`/api/responsables-publics?ids=${IDS.join(",")}`)
+        fetch(`/api/france-remunerations-gouvernement-2026?ids=${IDS.join(",")}`)
         .then((res) => res.json())
         .then(setResponsables)
         .finally(() => setLoading(false));
@@ -128,7 +128,7 @@ export default function ResponsablesPublicsView() {
             <header className="mb-4">
                 <div className="lg:flex justify-between items-center mb-6">
                     <div className="lg:flex items-center gap-4">
-                        <DataSelector dataset="responsables-publics" />
+                        <DataSelector dataset="france-remunerations-gouvernement-2026" />
                         <InfoButton onClick={() => setShowInfo(true)} />
                     </div>
                 </div>
@@ -151,11 +151,10 @@ export default function ResponsablesPublicsView() {
                                 if (!responsable) return null;
                                 return (
                                     <div key={id} className="mr-4">
-                                        <ResponsablesPublicsCard key={id} responsable={responsable} isFirst={isFirst} />
+                                        <FranceRemunerationsGouvernement2026Card key={id} responsable={responsable} isFirst={isFirst} />
                                     </div>
                                 );
                             })}
-
                             </div>
                         </div>
                     ))}

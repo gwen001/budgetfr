@@ -33,7 +33,7 @@ function capitalizeWords(str: string | null | undefined) {
       .join(" ");
 }
 
-export default function ResponsablesPublicsRemunerationsChart({data, onSliceClick, selectedFonction, }: Props) {
+export default function FranceRemunerationsResponsablesPublicsChart({data, onSliceClick, selectedFonction, }: Props) {
     const agg = useMemo(() => {
         const map = new Map();
 

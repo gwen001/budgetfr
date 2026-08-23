@@ -1,5 +1,5 @@
 import { ResponsablePublic } from "@/lib/supabase";
-import ResponsablesPublicsChart from "@/components/ResponsablesPublicsChart";
+import FranceRemunerationsGouvernement2026Chart from "@/components/FranceRemunerationsGouvernement2026Chart";
 
 function capitalizeWords(str: string) {
     return str
@@ -30,7 +30,7 @@ type Props = {
 };
 
 
-export default function ResponsablesPublicsCard({responsable, isFirst }: Props) {
+export default function FranceRemunerationsGouvernement2026Card({responsable, isFirst }: Props) {
     const age =
         new Date().getFullYear() -
         new Date(responsable.date_naissance).getFullYear();
@@ -73,7 +73,7 @@ export default function ResponsablesPublicsCard({responsable, isFirst }: Props) 
                     </div>
 
                     <div className="w-70">
-                        <ResponsablesPublicsChart declarations={responsable.declarations} />
+                        <FranceRemunerationsGouvernement2026Chart declarations={responsable.declarations} />
                     </div>
                 </div>
         </div>
