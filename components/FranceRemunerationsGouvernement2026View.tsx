@@ -16,19 +16,19 @@ export default function FranceRemunerationsGouvernement2026View() {
     const groupes = [
         {
             titre: "Premier Ministre",
-            ids: [1865, 2395, 474, 277, ],
+            ids: [1865, 2394, 474, 277, ],
         },
         {
             titre: "Ministère de l'Intérieur",
-            ids: [2351, 281, 3123, ],
+            ids: [2350, 281, 3122, ],
         },
         {
             titre: "Ministère des Armées et des Anciens combattants",
-            ids: [3118, 2786, ],
+            ids: [3117, 2785, ],
         },
         {
             titre: "Ministère du Travail et des Solidarités",
-            ids: [1162, 2756, ],
+            ids: [1162, 2755, ],
         },
         {
             titre: "Ministère de la Transition écologique, de la Biodiversité et des Négociations internationales sur le climat et la nature",
@@ -40,11 +40,11 @@ export default function FranceRemunerationsGouvernement2026View() {
         },
         {
             titre: "Ministère de l'Économie, des Finances et de la Souveraineté industrielle, énergétique et numérique",
-            ids: [1942, 474, 2121, 1896, ],
+            ids: [1942, 474, 2120, 1896, ],
         },
         {
             titre: "Ministère des Petites et moyennes entreprises, du Commerce, de l'Artisanat et du Tourisme et du Pouvoir d'achat",
-            ids: [2409, ],
+            ids: [2408, ],
         },
         {
             titre: "Ministère de l'Agriculture, de l'Agro-alimentaire et de la Souveraineté alimentaire",
@@ -52,7 +52,7 @@ export default function FranceRemunerationsGouvernement2026View() {
         },
         {
             titre: "Ministère de l'Éducation nationale",
-            ids: [1347, 2756, ],
+            ids: [1347, 2755, ],
         },
         {
             titre: "Ministère de l'Europe et des Affaires étrangères",
@@ -60,15 +60,15 @@ export default function FranceRemunerationsGouvernement2026View() {
         },
         {
             titre: "Ministère de la Santé, des Familles, de l'Autonomie et des Personnes handicapées",
-            ids: [2707, 1303, ],
+            ids: [2706, 1303, ],
         },
         {
             titre: "Ministère de la Culture",
-            ids: [2440, ],
+            ids: [2439, ],
         },
         {
             titre: "Ministère des Outre-mer",
-            ids: [2292, ],
+            ids: [2291, ],
         },
         {
             titre: "Ministère de l'Aménagement du territoire et de la Décentralisation",
@@ -88,7 +88,7 @@ export default function FranceRemunerationsGouvernement2026View() {
         },
         {
             titre: "Ministère des Transports",
-            ids: [2964, ],
+            ids: [2963, ],
         },
         {
             titre: "Ministère de la Ville et du Logement",
