@@ -6,7 +6,7 @@ import Loader from "@/components/Loader";
 import YearSelector from "@/components/YearSelector";
 import DataSelector from "@/components/DataSelector";
 import InfoButton from "@/components/InfoButton";
-import InfoPopup from "@/components/InfoParisData";
+import InfoPopup from "@/components/InfoSubventionsVersees";
 import ParisSubventionsVerseesChart from "@/components/ParisSubventionsVerseesChart";
 import ParisSubventionsVerseesTable from "@/components/ParisSubventionsVerseesTable";
 

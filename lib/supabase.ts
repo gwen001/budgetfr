@@ -88,3 +88,14 @@ export type ResponsableRemunerationCompute = {
     textED: string;
 };
 
+export type AidePubliqueDeveloppement = {
+    id: number;
+    annee: number | null;
+    pays_beneficiaire: string | null;
+    pays_beneficiaire_iso: string | null;
+    region: string | null;
+    sous_region: string | null;
+    description: string | null;
+    secteur: string | null;
+    montant: number | null;
+};

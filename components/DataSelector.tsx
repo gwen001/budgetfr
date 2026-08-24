@@ -21,8 +21,9 @@ export default function DatasetSelector({ dataset }: Props) {
         >
             <option value="paris-subventions-associations-votees">PARIS: Subventions aux associations votées</option>
             <option value="paris-subventions-versees">PARIS: Subventions versées - annexe compte administratif</option>
+            <option value="france-remunerations-responsables-publics">FRANCE: Rémunérations des responsables publics par fonction</option>
             <option value="france-remunerations-gouvernement-2026">FRANCE: Rémunérations des membres du gouvernement 2026</option>
-            {/* <option value="france-remunerations-responsables-publics">FRANCE: Rémunérations des responsables publics par fonction</option> */}
+            {/* <option value="monde-aide-publique-developpement">MONDE: Répartition des aides publiques au développpement</option> */}
         </select>
     );
 }

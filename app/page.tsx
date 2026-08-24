@@ -26,15 +26,15 @@ export default function Page() {
                     </Link>
                 </li>
                 <li>
+                    <Link href="/france-remunerations-responsables-publics" className="text-blue-600 underline">
+                        FRANCE: Répartition des rémunérations des responsables publics par fonction
+                    </Link>
+                </li>
+                <li>
                     <Link href="/france-remunerations-gouvernement-2026" className="text-blue-600 underline">
                         FRANCE: Rémunérations des membres du gouvernement 2026
                     </Link>
                 </li>
-                {/* <li>
-                    <Link href="/france-remunerations-responsables-publics" className="text-blue-600 underline">
-                        FRANCE: Rémunérations des responsables publics par fonction
-                    </Link>
-                </li> */}
             </ul>
         </div>
   );

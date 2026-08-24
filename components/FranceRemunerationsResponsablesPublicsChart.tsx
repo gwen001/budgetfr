@@ -110,7 +110,7 @@ export default function FranceRemunerationsResponsablesPublicsChart({data, onSli
     return (
         <div className="bg-white rounded-xl shadow p-2 sm:p-8">
             <h2 className="text-center lg:text-left text-xl font-semibold mb-4">
-                Rémunération des responsables publics par fonction
+                Répartition des rémunérations par fonction
             </h2>
 
             <div className="flex flex-col lg:flex-row gap-6 border-0 items-center lg:items-start lg:justify-center">

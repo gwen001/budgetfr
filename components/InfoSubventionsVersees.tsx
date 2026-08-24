@@ -5,7 +5,7 @@ type Props = {
     onClose: () => void;
 };
 
-export default function InfoParisData({ open, onClose }: Props) {
+export default function InfoSubventionsVersees({ open, onClose }: Props) {
     if (!open) return null;
 
     return (
@@ -15,11 +15,11 @@ export default function InfoParisData({ open, onClose }: Props) {
         >
             <div
             className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full text-sm md:text-base text-gray-700"
-            onClick={(e) => e.stopPropagation()}   // 👈 clic dans la popup = ne pas fermer
+            onClick={(e) => e.stopPropagation()}   // clic dans la popup = ne pas fermer
             >
-                <h2 className="text-lg md:text-xl font-semibold mb-4 text-gray-900">Liste des subventions aux associations votées par la ville de Paris.</h2>
+                <h2 className="text-lg md:text-xl font-semibold mb-4 text-gray-900">Subventions versées par la ville de Paris.</h2>
                 <p className="mb-6">
-                    Sont considérées comme bénéficiaires de subvention les associations relevant de la loi du 1er juillet 1901 ayant déposé par exercice budgétaire une ou plusieurs demandes de subvention auprès de la ville de Paris.
+                    Subventions versées à des organismes de droit privé et de droit public, tant en section d'investissement qu'en section de fonctionnement pour un exercice donné.
                 </p>
                 <p className="mb-6">
                     Données extraites de <a href="https://opendata.paris.fr/" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">Paris | DATA</a>, site officiel de la démarche Open Data de la ville de Paris.

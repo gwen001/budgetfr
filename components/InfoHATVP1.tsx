@@ -15,9 +15,9 @@ export default function InfoHATVP({ open, onClose }: Props) {
         >
             <div
             className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full text-sm md:text-base text-gray-700"
-            onClick={(e) => e.stopPropagation()}   // 👈 clic dans la popup = ne pas fermer
+            onClick={(e) => e.stopPropagation()}   // clic dans la popup = ne pas fermer
             >
-                <h2 className="text-lg md:text-xl font-semibold mb-4 text-gray-900">Liste des subventions aux associations votées par la ville de Paris.</h2>
+                <h2 className="text-lg md:text-xl font-semibold mb-4 text-gray-900">Rémunérations des reponsables publics.</h2>
                 <p className="mb-6">
                     Données extraites du site de la <a href="https://www.hatvp.fr/" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">Haute Autorité pour la Transparence de la Vie Publique</a>, chargée de promouvoir la probité et l'exemplarité des responsables publics.
                 </p>
