@@ -101,7 +101,7 @@ export default function MondeAidePubliqueDeveloppementTable({ data, selectedCate
                             type="text"
                             value={searchTerm}
                             onChange={(e) => onSearchTermChange(e.target.value)}
-                            placeholder="Filtrer par bénéficiaire..."
+                            placeholder="Rechercher..."
                             className="border rounded px-3 py-1 text-sm pr-6 w-full mb-2 lg:mb-0"
                         />
 
@@ -109,7 +109,7 @@ export default function MondeAidePubliqueDeveloppementTable({ data, selectedCate
                             <button
                             onClick={() => onSearchTermChange("")}
                             className="pb-2 lg:pb-0 absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:cursor-pointer hover:text-gray-700 font-bold"
-                            title="Réinitialiser le filtre"
+                            title="Réinitialiser"
                             >
                             ×
                             </button>
