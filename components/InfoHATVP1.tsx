@@ -24,6 +24,9 @@ export default function InfoHATVP({ open, onClose }: Props) {
                 <p className="mb-6">
                     Les données fournies par HATVP sont basées sur les déclarations des responsables publics eux-mêmes.
                 </p>
+                <p className="mb-6">
+                    Les rémunérations, indemnités et gratifications perçues sont déclarées sur une base annuelle pour leur montant net, après cotisations sociales mais avant impôt.
+                </p>
                 <p className="mb-0">
                     Ne sont pas intégrées:
                 </p>
