@@ -56,7 +56,7 @@ export default function MondeAidePubliqueDeveloppementTable({ data, selectedCate
     );
 
     const filteredBySearch = sorted.filter((s) =>
-        s.description.toLowerCase().includes(searchTerm.toLowerCase())
+        s.pays_beneficiaire.toLowerCase().includes(searchTerm.toLowerCase()) || s.description.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const total = filteredBySearch.reduce((sum, s) => sum + s.montant, 0);

@@ -79,7 +79,7 @@ export default function MondeAidePubliqueDeveloppementView() {
     return (
         <div className="p-0">
              <header className="mb-4">
-                 <div className="lg:flex justify-between items-center mb-6">
+                 <div className="lg:flex justify-between text-center lg:items-center mb-6">
                      <div className="lg:flex items-center gap-4">
                          <DataSelector dataset="monde-aide-publique-developpement" />
                          <InfoButton onClick={() => setShowInfo(true)} />

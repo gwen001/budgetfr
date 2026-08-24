@@ -65,31 +65,33 @@ export default function ParisSubventionsAssociationsVoteesTable({ data, selected
         <div className="bg-white rounded-xl shadow p-6 mt-6">
             <div className="flex justify-between items-center mb-4">
                 <div className="grid grid-cols-1 lg:flex items-center gap-x-20">
-                    <div className="flex justify-between items-center">
+                    <div className="sm:flex justify-between md:items-center">
                         {/* Titre */}
-                        <h2 className="text-m lg:text-xl font-semibold mb-2 lg:mb-0">
+                        <h2 className="text-m lg:text-xl font-semibold mb-2 sm:mb-0">
                             Détails des subventions
                         </h2>
 
                         {/* Compteur */}
-                        <div className="flex items-center">
-                            <span className="text-sm text-gray-700 ms-2">
-                                ({displayedCount}/{totalCount})
-                            </span>
-                        </div>
+                        <div className="flex mb-2 sm:mb-0">
+                            <div className="flex items-center">
+                                <span className="text-sm text-gray-700 sm:ms-2">
+                                    ({displayedCount}/{totalCount})
+                                </span>
+                            </div>
 
-                        {/* Checkbox regroupement */}
-                        <label className="flex items-center gap-1 cursor-pointer select-none ms-4">
-                            <input
-                                type="checkbox"
-                                checked={groupBySiret}
-                                onChange={onToggleGroupBySiret}
-                                className="w-4 h-4"
-                            />
-                            <span className="text-sm">
-                                regrouper par siret
-                            </span>
-                        </label>
+                            {/* Checkbox regroupement */}
+                            <label className="flex items-center gap-1 cursor-pointer select-none ms-4">
+                                <input
+                                    type="checkbox"
+                                    checked={groupBySiret}
+                                    onChange={onToggleGroupBySiret}
+                                    className="w-4 h-4"
+                                />
+                                <span className="text-sm">
+                                    regrouper par siret
+                                </span>
+                            </label>
+                        </div>
                     </div>
 
                     {/* Filtre textuel */}

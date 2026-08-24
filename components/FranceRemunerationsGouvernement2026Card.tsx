@@ -48,7 +48,7 @@ export default function FranceRemunerationsGouvernement2026Card({responsable, is
     );
 
     return (
-        <div className="relative flex gap-0 border border-gray-300 p-0 rounded-lg shadow-sm bg-sky-50 max-w-md w-full">
+        <div className="relative flex gap-0 border border-gray-300 p-0 rounded-lg shadow-sm bg-sky-50 max-w-md w-full mr-10 mb-4">
             {/* <img
                 src={`${responsable.civilite}` == "mme" ? "/img/woman.png" : "/img/man.png"}
                 alt={`${responsable.prenom} ${responsable.nom}`}

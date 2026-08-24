@@ -126,7 +126,7 @@ export default function FranceRemunerationsGouvernement2026View() {
     return (
         <div className="p-0">
             <header className="mb-4">
-                <div className="lg:flex justify-between items-center mb-6">
+                 <div className="lg:flex justify-between text-center sm:items-center mb-6">
                     <div className="lg:flex items-center gap-4">
                         <DataSelector dataset="france-remunerations-gouvernement-2026" />
                         <InfoButton onClick={() => setShowInfo(true)} />
@@ -141,16 +141,16 @@ export default function FranceRemunerationsGouvernement2026View() {
             ) : (
                 <div className="bg-white rounded-xl shadow p-2 sm:p-8">
                     {groupes.map((groupe, index) => (
-                        <div key={index} className="mb-15">
+                        <div key={index} className="mb-6">
                             <h2 className="text-2xl font-bold mb-4">{groupe.titre}</h2>
 
-                            <div className="flex flex-wrap gap-6">
+                            <div className="flex flex-wrap gap-0">
                             {groupe.ids.map((id,index) => {
                                 const isFirst = index === 0;
                                 const responsable = responsables.find(r => r.id === id);
                                 if (!responsable) return null;
                                 return (
-                                    <div key={id} className="mr-4">
+                                    <div key={id} className="">
                                         <FranceRemunerationsGouvernement2026Card key={id} responsable={responsable} isFirst={isFirst} />
                                     </div>
                                 );

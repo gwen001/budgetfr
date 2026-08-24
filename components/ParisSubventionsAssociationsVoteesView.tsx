@@ -57,7 +57,7 @@ export default function ParisSubventionsAssociationsVoteesView() {
     return (
         <div className="p-0">
              <header className="mb-4">
-                 <div className="lg:flex justify-between items-center mb-6">
+                 <div className="lg:flex justify-between text-center lg:items-center mb-6">
                      <div className="lg:flex items-center gap-4">
                          <DataSelector dataset="paris-subventions-associations-votees" />
                          <InfoButton onClick={() => setShowInfo(true)} />
