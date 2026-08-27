@@ -18,9 +18,13 @@ type Props = {
     selectedCategory: string | null;
     onCategoryClick: (category: string | null) => void;
     countByCategory: Record<string, number>;
+    showMultilateral: boolean;
+    setShowMultilateral: (v: boolean) => void;
+    enableStructuredFilter: boolean;
+    setEnableStructuredFilter: (v: boolean) => void;
 };
 
-export default function MondeAidePubliqueDeveloppementChart({ data, selectedCategory, onCategoryClick, countByCategory }: Props) {
+export default function MondeAidePubliqueDeveloppementChart({ data, selectedCategory, onCategoryClick, countByCategory, showMultilateral, setShowMultilateral, enableStructuredFilter, setEnableStructuredFilter }: Props) {
     const [hiddenSlices, setHiddenSlices] = useState<string[]>([]);
 
     if (data.length === 0) {
@@ -55,8 +59,8 @@ export default function MondeAidePubliqueDeveloppementChart({ data, selectedCate
         "Extrême-Orient":               "#FFCC00",
         "Moyen-Orient":                 "#FF9900",
         "Océanie":                      "#FF99CC",
-        "Multilatéral":                 "#CC00CC",
         "Non spécifié":                 "#DDDDDD",
+        "Multilatéral":                 "#CC00CC",
     };
 
     // 1. Ordre imposé
@@ -78,38 +82,8 @@ export default function MondeAidePubliqueDeveloppementChart({ data, selectedCate
 
     // 4. Dataset dans l’ordre filtré
     const labels = FILTERED_REGIONS;
-
     const values = FILTERED_REGIONS.map((region) => amountsByRegion[region]);
-
     const backgroundColor = FILTERED_REGIONS.map((region) => COLORS[region]);
-
-    // const REGION_ORDER = Object.keys(COLORS);
-
-    // const amountsByRegion = data.reduce((acc, item) => {
-    //     const region = item.region || "Non spécifié";
-    //     const montant = item.montant || 0;
-    //     acc[region] = (acc[region] || 0) + montant;
-    //     return acc;
-    // }, {});
-
-    // const labels = REGION_ORDER;
-
-    // const values = REGION_ORDER.map((region) => {
-    //     return amountsByRegion[region] || 0;
-    // });
-
-    // const backgroundColor = REGION_ORDER.map((region) => COLORS[region]);
-
-    // const labels = sorted.map(([label]) => label);
-
-    // const values = labels.map((label) =>
-    //     data
-    //         .filter(
-    //         (s) =>
-    //             (s.region || "Non spécifié") === label
-    //         )
-    //         .reduce((sum, s) => sum + (s.montant || 0), 0)
-    //     );
 
     // total global, toutes catégories confondues
     const totalAll = values.reduce((a, b) => a + b, 0);
@@ -123,53 +97,6 @@ export default function MondeAidePubliqueDeveloppementChart({ data, selectedCate
             },
         ],
     };
-
-    // const chartData = {
-    //     labels,
-    //     datasets: [
-    //         {
-    //             data: values,
-    //             borderColor: "#ffffff",
-    //             borderWidth: 2,
-    //             backgroundColor: [
-    //                 "#DD0000",
-    //                 "#FF3300",
-    //                 "#FF6600",
-    //                 "#FF9900",
-    //                 "#FFCC00",
-    //                 "#EEEE00",
-    //                 "#CCFF00",
-    //                 "#99FF00",
-    //                 "#00FF99",
-    //                 "#00FFCC",
-    //                 "#00FFFF",
-    //                 "#00CCFF",
-    //                 "#0099FF",
-    //                 "#0066FF",
-    //                 "#0000FF",
-    //                 "#3300CC",
-    //                 "#6600CC",
-    //                 "#9900CC",
-    //                 "#CC00CC",
-    //                 "#FF00CC",
-    //                 "#FF33CC",
-    //                 "#FF66CC",
-    //                 "#FF99CC",
-    //                 "#FFCCFF",
-    //             ],
-    //         },
-    //     ],
-    // };
-
-    // const legend = labels
-    //     .map((label, index) => ({
-    //         label,
-    //         value: values[index], // toujours une vraie valeur
-    //         color: chartData.datasets[0].backgroundColor[index],
-    //         hidden: hiddenSlices.includes(label),
-    //         percent: ((values[index] / totalAll) * 100).toFixed(1),
-    //     }))
-    //     .sort((a, b) => b.value - a.value);
 
     const legend = FILTERED_REGIONS.map((region) => ({
         label: region,
@@ -221,13 +148,13 @@ export default function MondeAidePubliqueDeveloppementChart({ data, selectedCate
         },
     };
 
-    const toggleSlice = (label: string) => {
-        setHiddenSlices((prev) =>
-            prev.includes(label)
-            ? prev.filter((l) => l !== label) // réafficher
-            : [...prev, label]                // masquer
-        );
-    };
+    // const toggleSlice = (label: string) => {
+    //     setHiddenSlices((prev) =>
+    //         prev.includes(label)
+    //         ? prev.filter((l) => l !== label) // réafficher
+    //         : [...prev, label]                // masquer
+    //     );
+    // };
 
     const handleLegendClick = (label: string) => {
         if (selectedCategory === label) {
@@ -239,9 +166,66 @@ export default function MondeAidePubliqueDeveloppementChart({ data, selectedCate
 
     return (
         <div className="bg-white rounded-xl shadow p-2 sm:p-8">
-            <h2 className="text-center lg:text-left text-xl font-semibold mb-4">
-                Répartition des aides par région
-            </h2>
+            <div className="flex items-center justify-between mb-4">
+                <h2 className="text-center lg:text-left text-xl font-semibold mb-4">
+                    Répartition des aides par région
+                </h2>
+
+                <div className="flex flex-col items-endddd gap-1">
+                    {/* Checkbox Multilatéral */}
+                    {/* <div className="flex items-center gap-2 relative">
+                        <label className="flex items-center gap-2 cursor-pointer select-none">
+                            <input
+                            type="checkbox"
+                            checked={showMultilateral}
+                            onChange={(e) => setShowMultilateral(e.target.checked)}
+                            className="w-4 h-4"
+                            />
+                            <span>Afficher Multilatéral</span>
+                        </label>
+                        <div className="ml-0 relative group">
+                            <span className="w-4 h-4 flex items-center justify-center rounded-full bg-gray-700 text-white text-xs font-bold cursor-pointer group-hover:bg-black">
+                                ?
+                            </span>
+                            <div className="absolute right-0 top-6 hidden group-hover:block bg-black text-white text-xs p-2 rounded shadow-lg w-50 z-10">
+                                Inclus les aides qui ne sont pas versées directement à un pays, mais à une organisation internationale, qui elle-même redistribue ensuite les fonds vers plusieurs pays.
+                            </div>
+                        </div>
+                    </div> */}
+
+                    {/* Checkbox Filtre structuré */}
+                    <div className="flex items-center gap-2 relative">
+                        <label className="flex items-center gap-2 cursor-pointer select-none">
+                            <input
+                            type="checkbox"
+                            checked={enableStructuredFilter}
+                            onChange={(e) => setEnableStructuredFilter(e.target.checked)}
+                            className="w-4 h-4"
+                            />
+                            <span>Activer filtre structuré</span>
+                        </label>
+                        {/* Icône "?" */}
+                        {/* <div className="ml-0 relative group">
+                            <span className="ml-0 w-4 h-4 flex items-center justify-center rounded-full bg-gray-700 text-white text-xs font-bold cursor-pointer group-hover:bg-black">
+                                ?
+                            </span>
+                            <div className="absolute right-0 top-6 hidden group-hover:block bg-black text-white text-xs p-2 rounded shadow-lg w-56 z-10">
+                                Exclus les aides qui ne se sont pas considérées comme des aides directes par l'OCDE.
+                            </div>
+                        </div> */}
+                    </div>
+                </div>
+
+                {/* <label className="flex items-center gap-2 cursor-pointer select-none">
+                    <input
+                    type="checkbox"
+                    checked={showMultilateral}
+                    onChange={(e) => setShowMultilateral(e.target.checked)}
+                    className="w-4 h-4"
+                    />
+                    <span>Afficher Multilatéral</span>
+                </label> */}
+            </div>
 
             <div className="flex flex-col lg:flex-row gap-6 border-0 items-center lg:items-start lg:justify-center">
                 <div className="w-2/3 lg:w-1/2 border-0">

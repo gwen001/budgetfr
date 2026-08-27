@@ -98,4 +98,7 @@ export type AidePubliqueDeveloppement = {
     description: string | null;
     secteur: string | null;
     montant: number | null;
+    type_de_financement: string | null;
+    modalites_de_cooperation: string | null;
+    type_de_flux: string | null;
 };

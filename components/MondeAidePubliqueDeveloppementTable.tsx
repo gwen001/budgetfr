@@ -142,7 +142,7 @@ export default function MondeAidePubliqueDeveloppementTable({ data, selectedCate
                         <tr className="bg-white font-semibold">
                             <td className="px-4 py-2 hidden sm:block"></td>
                             <td className="px-4 py-2"></td>
-                            <td className="px-4 py-2 hidden md:block"></td>
+                            {/* <td className="px-4 py-2 hidden md:block"></td> */}
                             <td className="px-4 py-2 text-right text-red-500">TOTAL:</td>
                             <td className="px-4 py-2 text-right text-red-500">
                                 {total.toLocaleString("fr-FR", {
@@ -157,10 +157,10 @@ export default function MondeAidePubliqueDeveloppementTable({ data, selectedCate
                         <tr>
                             <th className="px-4 py-2 text-center">#</th>
                             <th className="px-4 py-2 text-left">Pays bénéficiaire</th>
-                            <th className="px-4 py-2 text-left hidden md:block">Secteur</th>
+                            {/* <th className="px-4 py-2 text-left hidden md:block">Secteur</th> */}
                             {/* <th className="px-4 py-2 text-left">Région</th> */}
                             <th className="px-4 py-2 text-left">Description</th>
-                            <th className="px-4 py-2 text-right">Montant voté</th>
+                            <th className="px-4 py-2 text-right">Montant</th>
                         </tr>
                     </thead>
 
@@ -172,7 +172,7 @@ export default function MondeAidePubliqueDeveloppementTable({ data, selectedCate
                                     {s.pays_beneficiaire}
                                     {groupBy ? " ("+s.lignes.length+")" : ""}
                                 </td>
-                                <td className="px-4 py-2 hidden md:block">
+                                {/* <td className="px-4 py-2 hidden md:block">
                                     {groupBy ? (
                                             "-"
                                     ) : (
@@ -180,15 +180,15 @@ export default function MondeAidePubliqueDeveloppementTable({ data, selectedCate
                                             {s.secteur}
                                         </span>
                                     )}
-                                </td>
+                                </td> */}
                                 {/* <td className="px-4 py-2">{s.region ?? "-"}</td> */}
                                 <td className="px-4 py-2">
                                     {groupBy ? (
                                             "-"
                                     ) : (
                                         <span title={`${s.description}`}>
-                                            {s.description && s.description.length > 70
-                                            ? s.description.slice(0, 70) + "..."
+                                            {s.description && s.description.length > 80
+                                            ? s.description.slice(0, 80) + "..."
                                             : s.description}
                                         </span>
                                     )}
@@ -205,7 +205,7 @@ export default function MondeAidePubliqueDeveloppementTable({ data, selectedCate
                         <tr className="bg-gray-200 font-semibold">
                             <td className="px-4 py-2 hidden sm:block"></td>
                             <td className="px-4 py-2"></td>
-                            <td className="px-4 py-2 hidden md:block"></td>
+                            {/* <td className="px-4 py-2 hidden md:block"></td> */}
                             <td className="px-4 py-2 text-right text-red-500">TOTAL:</td>
                             <td className="px-4 py-2 text-right text-red-500">
                                 {total.toLocaleString("fr-FR", {
