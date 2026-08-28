@@ -14,25 +14,39 @@ export default function Page() {
         <div className="p-0">
             <h1 className="text-3xl font-bold mb-6">BudgetFR</h1>
 
-            <ul className="list-disc pl-6 space-y-2">
+            <h2 className="text-2xl font-bold mb-3">PARIS</h2>
+            <ul className="list-disc pl-6 space-y-2 mb-6">
                 <li>
                     <Link href="/paris-subventions-associations-votees" className="text-blue-600 underline">
-                        PARIS: Répartition des subventions aux associations votées
+                        Répartition des subventions aux associations votées
                     </Link>
                 </li>
                 <li>
                     <Link href="/paris-subventions-versees" className="text-blue-600 underline">
-                        PARIS: Répartition des subventions versées - annexe compte administratif
+                        Répartition des subventions versées - annexe compte administratif
                     </Link>
                 </li>
+            </ul>
+
+            <h2 className="text-2xl font-bold mb-3">FRANCE</h2>
+            <ul className="list-disc pl-6 space-y-2 mb-6">
                 <li>
                     <Link href="/france-remunerations-responsables-publics" className="text-blue-600 underline">
-                        FRANCE: Répartition des rémunérations des responsables publics par fonction
+                        Répartition des rémunérations des responsables publics par fonction
                     </Link>
                 </li>
                 <li>
                     <Link href="/france-remunerations-gouvernement-2026" className="text-blue-600 underline">
-                        FRANCE: Rémunérations des membres du gouvernement 2026
+                        Rémunérations des membres du gouvernement 2026
+                    </Link>
+                </li>
+            </ul>
+
+            <h2 className="text-2xl font-bold mb-3">MONDE</h2>
+            <ul className="list-disc pl-6 space-y-2 mb-6">
+                <li>
+                    <Link href="/monde-aide-publique-developpement" className="text-blue-600 underline">
+                        Répartition des aides publiques au développpement
                     </Link>
                 </li>
             </ul>
