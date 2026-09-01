@@ -2,14 +2,15 @@ import "@/styles/globals.css";
 import type { ReactNode } from "react";
 
 export const metadata = {
-    title: "BudgetFR - Statistiques budgétaires Françaises",
-    description: "Statistiques des subventions votées par la ville de Paris",
+    title: "BudgetFR - Statistiques budgétaires françaises",
+    description: "Statistiques budgétaires françaises accompagnées de graphiques, Paris, France, Monde",
     keywords: [
         "data",
         "visualisation",
         "subventions",
         "associations",
         "Paris",
+        "France",
         "social",
         "environnement",
         "culture",
@@ -18,8 +19,8 @@ export const metadata = {
     ],
     authors: [{ name: "Gwendal Le Coguic" }],
     openGraph: {
-        title: "Subventions aux associations",
-        description: "Statistiques des subventions votées par la ville de Paris",
+        title: "BudgetFR - Statistiques budgétaires françaises",
+        description: "Statistiques budgétaires françaises accompagnées de graphiques, Paris, France, Monde",
         url: "https://www.budgetfr.info/",
         siteName: "Subventions explorer",
         locale: "fr_FR",
@@ -33,8 +34,8 @@ export const metadata = {
     },
     twitter: {
         card: "summary_large_image",
-        title: "Subventions aux associations",
-        description: "Statistiques des subventions votées par la ville de Paris",
+        title: "BudgetFR - Statistiques budgétaires françaises",
+        description: "Statistiques budgétaires françaises accompagnées de graphiques, Paris, France, Monde",
         site: "https://www.budgetfr.info/",
         images: ["https://www.budgetfr.info/img/preview.png"],
         creator: "@gwendallecoguic",
