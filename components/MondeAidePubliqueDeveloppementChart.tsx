@@ -173,7 +173,7 @@ export default function MondeAidePubliqueDeveloppementChart({ data, selectedCate
 
                 <div className="flex flex-col items-endddd gap-1">
                     {/* Checkbox Multilatéral */}
-                    <div className="flex items-center gap-2 relative justify-center sm:justify-start">
+                    {/* <div className="flex items-center gap-2 relative justify-center sm:justify-start">
                         <label className="flex items-center gap-2 cursor-pointer select-none">
                             <input
                             type="checkbox"
@@ -191,7 +191,7 @@ export default function MondeAidePubliqueDeveloppementChart({ data, selectedCate
                                 Inclus les aides qui ne sont pas versées directement à un pays, mais à une organisation internationale, qui elle-même redistribue ensuite les fonds vers plusieurs pays.
                             </div>
                         </div>
-                    </div>
+                    </div> */}
 
                     {/* Checkbox Filtre structuré */}
                     <div className="flex items-center gap-2 relative justify-center sm:justify-start">
