@@ -166,14 +166,14 @@ export default function MondeAidePubliqueDeveloppementChart({ data, selectedCate
 
     return (
         <div className="bg-white rounded-xl shadow p-2 sm:p-8">
-            <div className="flex items-center justify-between mb-4">
+            <div className="sm:flex items-center justify-between mb-4">
                 <h2 className="text-center lg:text-left text-xl font-semibold mb-4">
                     Répartition des aides par région
                 </h2>
 
                 <div className="flex flex-col items-endddd gap-1">
                     {/* Checkbox Multilatéral */}
-                    {/* <div className="flex items-center gap-2 relative">
+                    <div className="flex items-center gap-2 relative justify-center sm:justify-start">
                         <label className="flex items-center gap-2 cursor-pointer select-none">
                             <input
                             type="checkbox"
@@ -191,10 +191,10 @@ export default function MondeAidePubliqueDeveloppementChart({ data, selectedCate
                                 Inclus les aides qui ne sont pas versées directement à un pays, mais à une organisation internationale, qui elle-même redistribue ensuite les fonds vers plusieurs pays.
                             </div>
                         </div>
-                    </div> */}
+                    </div>
 
                     {/* Checkbox Filtre structuré */}
-                    <div className="flex items-center gap-2 relative">
+                    <div className="flex items-center gap-2 relative justify-center sm:justify-start">
                         <label className="flex items-center gap-2 cursor-pointer select-none">
                             <input
                             type="checkbox"
@@ -205,26 +205,16 @@ export default function MondeAidePubliqueDeveloppementChart({ data, selectedCate
                             <span>Activer filtre structuré</span>
                         </label>
                         {/* Icône "?" */}
-                        {/* <div className="ml-0 relative group">
+                        <div className="ml-0 relative group">
                             <span className="ml-0 w-4 h-4 flex items-center justify-center rounded-full bg-gray-700 text-white text-xs font-bold cursor-pointer group-hover:bg-black">
                                 ?
                             </span>
                             <div className="absolute right-0 top-6 hidden group-hover:block bg-black text-white text-xs p-2 rounded shadow-lg w-56 z-10">
                                 Exclus les aides qui ne se sont pas considérées comme des aides directes par l'OCDE.
                             </div>
-                        </div> */}
+                        </div>
                     </div>
                 </div>
-
-                {/* <label className="flex items-center gap-2 cursor-pointer select-none">
-                    <input
-                    type="checkbox"
-                    checked={showMultilateral}
-                    onChange={(e) => setShowMultilateral(e.target.checked)}
-                    className="w-4 h-4"
-                    />
-                    <span>Afficher Multilatéral</span>
-                </label> */}
             </div>
 
             <div className="flex flex-col lg:flex-row gap-6 border-0 items-center lg:items-start lg:justify-center">

@@ -67,7 +67,7 @@ export default function ParisSubventionsAssociationsVoteesTable({ data, selected
                 <div className="grid grid-cols-1 lg:flex items-center gap-x-20">
                     <div className="sm:flex justify-between md:items-center">
                         {/* Titre */}
-                        <h2 className="text-m lg:text-xl font-semibold mb-2 sm:mb-0">
+                        <h2 className="text-m lg:text-xl font-semibold mb-2 lg:mb-0">
                             Détails des subventions
                         </h2>
 

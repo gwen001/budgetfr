@@ -68,31 +68,33 @@ export default function MondeAidePubliqueDeveloppementTable({ data, selectedCate
         <div className="bg-white rounded-xl shadow p-6 mt-6">
             <div className="flex justify-between items-center mb-4">
                 <div className="grid grid-cols-1 lg:flex items-center gap-x-20">
-                    <div className="flex justify-between items-center">
+                    <div className="sm:flex justify-between md:items-center">
                         {/* Titre */}
                         <h2 className="text-m lg:text-xl font-semibold mb-2 lg:mb-0">
                             Détails des aides
                         </h2>
 
                         {/* Compteur */}
-                        <div className="flex items-center">
-                            <span className="text-sm text-gray-700 ms-2">
-                                ({displayedCount}/{totalCount})
-                            </span>
-                        </div>
+                        <div className="flex mb-2 sm:mb-0">
+                            <div className="flex items-center">
+                                <span className="text-sm text-gray-700 sm:ms-2">
+                                    ({displayedCount}/{totalCount})
+                                </span>
+                            </div>
 
-                        {/* Checkbox regroupement */}
-                        <label className="flex items-center gap-1 cursor-pointer select-none ms-4">
-                            <input
-                                type="checkbox"
-                                checked={groupBy}
-                                onChange={onToggleGroupBy}
-                                className="w-4 h-4"
-                            />
-                            <span className="text-sm">
-                                regrouper par pays
-                            </span>
-                        </label>
+                            {/* Checkbox regroupement */}
+                            <label className="flex items-center gap-1 cursor-pointer select-none ms-4">
+                                <input
+                                    type="checkbox"
+                                    checked={groupBy}
+                                    onChange={onToggleGroupBy}
+                                    className="w-4 h-4"
+                                />
+                                <span className="text-sm">
+                                    regrouper par pays
+                                </span>
+                            </label>
+                        </div>
                     </div>
 
                     {/* Filtre textuel */}
@@ -155,7 +157,7 @@ export default function MondeAidePubliqueDeveloppementTable({ data, selectedCate
                             </td>
                         </tr>
                         <tr>
-                            <th className="px-4 py-2 text-center">#</th>
+                            <th className="px-4 py-2 text-center hidden sm:block">#</th>
                             <th className="px-4 py-2 text-left">Pays bénéficiaire</th>
                             {/* <th className="px-4 py-2 text-left hidden md:block">Secteur</th> */}
                             {/* <th className="px-4 py-2 text-left">Région</th> */}
@@ -167,7 +169,7 @@ export default function MondeAidePubliqueDeveloppementTable({ data, selectedCate
                     <tbody>
                         {filteredBySearch.map((s, index) => (
                             <tr key={index} className="border-b">
-                                <td className="px-4 py-2 text-center">{index + 1}</td>
+                                <td className="px-4 py-2 text-center hidden sm:table-cell">{index + 1}</td>
                                 <td className="px-4 py-2">
                                     {s.pays_beneficiaire}
                                     {groupBy ? " ("+s.lignes.length+")" : ""}
